@@ -2,7 +2,7 @@ import express from 'express'
 import { PrismaClient} from '@prisma/client'
 import publicRouter from './router/api/router'
 import adminRouter from './router/admin/router'
-require('dotenv').config()
+
 const app = express()
 const prisma = new PrismaClient()
 declare global{
