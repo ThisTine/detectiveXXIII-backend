@@ -35,7 +35,7 @@ jobs:
     name: deploy to server
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    need: [build]
+    needs: [build]
     steps:
       - name: remote ssh
         uses: appleboy/ssh-action@master
