@@ -44,5 +44,7 @@ jobs:
             username: ${{ secrets.SSH_USERNAME }}
             password: ${{ secrets.SSH_PASSWORD }}
             script: |
+              touch ${{secrets.CONTAINER_ENV_PROD}} > ${{secrets.ENV_PROD_PATH}}
+              touch ${{secrets.CONTAINER_LABEL_PROD}} > ${{secrets.LABEL_PROD_PATH}}
               docker pull ${{secrets.DOCKER_REGISTRY}}/${{secrets.DOCKER_IMAGE_PRODUCTION}}:latest
-              docker run --name ${{secrets.CONTAINER_NAME}} ${{secrets.CONTAINER_ENV_PROD}} --label traefik.enable=true --traefik.http.routers.${{secrets.CONTAINER_NAME}}.rule=Host("${{secrets.CONTAINER_HOST_PROD}}") --label traefik.http.routers.${{secrets.CONTAINER_NAME}}.entrypoints=websecure --label traefik.http.routers.${{secrets.CONTAINER_NAME}}.tls.certresolver=myresolver --network proxy
+              docker run -d --name ${{secrets.CONTAINER_NAME}} --env-file ${{secrets.ENV_PROD_PATH}} --label-file ${{secrets.LABEL_PROD_PATH}} --network proxy
