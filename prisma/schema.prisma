@@ -13,8 +13,8 @@ model User{
   email String
   year Int @default(2)
   lifes Int @default(5)
-  img String
-  opened_hints String
+  img Bytes?
+  opened_hints Int @default(0)
   event_group_id String?
   event_group Event_Group? @relation(fields: [event_group_id],references: [id])
   event_hints_count Int @default(0)
