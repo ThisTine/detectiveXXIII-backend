@@ -24,7 +24,7 @@ app.use(session({
     secret:"test",    
     resave: false,
     saveUninitialized: false,
-    cookie:{domain:"localhost"}
+    cookie:{domain:process.env.COOKIE_ORIGIN}
 }))
 
 
