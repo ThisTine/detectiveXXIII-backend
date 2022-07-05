@@ -8,7 +8,7 @@ async (accessToken:string, refreshToken:string, profile:any, done:OAuth2Strategy
     try{
         const {data:{onPremisesSamAccountName}} = await axios.get(`https://graph.microsoft.com/v1.0/users/${profile.id}?$select=onPremisesSamAccountName`,{headers:{Authorization:`Bearer ${accessToken}`,"Content-Type":"application/json"}})
         const { _json} = profile
-        if(!(((onPremisesSamAccountName as string).startsWith("64") || (onPremisesSamAccountName as string).startsWith("65")) && _json.officeLocation === "Computer Science") || !onPremisesSamAccountName || !_json ){
+        if(!onPremisesSamAccountName || !(((onPremisesSamAccountName as string).startsWith("64") || (onPremisesSamAccountName as string).startsWith("65")) && _json.officeLocation === "Computer Science") || !onPremisesSamAccountName || !_json ){
             new Error("You don't have permission to enter !")
         }
         let year = parseInt((onPremisesSamAccountName as string).substring(0,2))
