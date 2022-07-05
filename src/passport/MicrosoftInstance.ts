@@ -25,7 +25,7 @@ async (accessToken:string, refreshToken:string, profile:any, done:OAuth2Strategy
                 id: _json.id,
                 email: _json.mail,
                 img: pf.data || null,
-                year: year-66,
+                year: 66-year,
                 name: _json.displayName,
             }
         })
