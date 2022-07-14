@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-export type eventGroup = {id:string,hints:{location:string,id:string,users:{id:string,name:string,email:string}[]}[]}
+export type eventGroup = {id:string,hints:{location:string,id:string}[],users:{id:string,name:string,email:string}[]}
 
 export interface eventGroups { 
     groups: eventGroup[] }
