@@ -15,6 +15,7 @@ import getEventHints from './routes/getEventHints'
 import deleteEventhint from './routes/deleteEventhint'
 import createEventHint from './routes/createEventHint'
 import { authAdmin } from '../../middleware/auth'
+import editEventHints from './routes/editEventHints'
 const adminRouter = express.Router()
 
 adminRouter.use(cors({allowedHeaders:["GET","POST","PUT","DELETE"],origin:process.env.APP_ADMIN}))
@@ -44,6 +45,8 @@ adminRouter.delete("/eventgroup", authAdmin, deleteEventGroup)
 adminRouter.put("/eventgroup", authAdmin, putEventHintsToGroup)
 
 adminRouter.get("/event/hint", authAdmin, getEventHints)
+
+adminRouter.put("/event/hint", authAdmin, editEventHints)
 
 adminRouter.delete("/event/hint", authAdmin, deleteEventhint)
 
