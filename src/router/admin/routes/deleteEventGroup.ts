@@ -12,13 +12,21 @@ interface deleteEventGroupRequestResponse {
 const deleteEventGroup = async (req: Request<any, any, deleteEventGroupRequestResponse>, res: Response<deleteEventGroupRequestResponse>) => {
     try {
         const { prisma } = req
-        const result = await prisma.event_Group.delete({
+        const delete_EventGroup = prisma.event_Group.delete({
             where: {
                 id: req.body.id
             }
         })
-        // Interface ??? 
-        res.send(result)
+        const delete_EventGroupOnHint = prisma.event_Group_On_Hint.deleteMany({
+            where: {
+                group_id: req.body.id
+            }
+        })
+
+        const result = await prisma.$transaction([delete_EventGroupOnHint, delete_EventGroup])
+
+        res.send({ id: result[1].id })
+
     } catch (err: any) {
         res.send(err)
     }
