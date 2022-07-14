@@ -10,6 +10,8 @@ interface sendCodeBody {
     code: string
 }
 
+//Boss ( Nattapat )
+
 // เปิดโค้ดต่าง ๆ 
 // เปิดโค้ดมี 2 แบบ คือเปิด paring code (โค้ดจับคู่พี่รหัสตอนเข้าเกม)
 // กับเปิด code แบบปกติ (คำไบ้,เปิดทายพี่รหัส) 

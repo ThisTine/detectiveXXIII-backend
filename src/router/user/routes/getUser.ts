@@ -14,6 +14,8 @@ interface User {
     partnerCount: number
 }
 
+//  Boss ( Nattapat )
+
 // เอา status ของ user ออกมาเพื่อ initialized user ก่อนเล่นเกม
 
 const getUser = (req:Request,res:Response<User | string>)=>{

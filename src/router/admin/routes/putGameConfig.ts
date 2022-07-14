@@ -4,6 +4,8 @@ export interface gameConfig {
     isGameReady: boolean, 
     isEventReady: boolean }
 
+// Tine ( Thistine ) & Thun ( Bsthun )
+
 // เปลี่ยน game config
 
 const putGameConfig = (req:Request<any,any,gameConfig,any>,res:Response<gameConfig>)=>{

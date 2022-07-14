@@ -4,6 +4,8 @@ interface deleteEventGroupRequestResponse {
     id:string
 }
 
+// Gun ( BlueBox ) && Boss ( Sorrawit )
+
 // ลบ event_group
 
 

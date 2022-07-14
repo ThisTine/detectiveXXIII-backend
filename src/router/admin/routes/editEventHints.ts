@@ -6,6 +6,8 @@ interface editEventHintRequest {
     location:string
 }
 
+// Gun ( BlueBox ) && Boss ( Sorrawit ) && Boss ( Nattapat )
+
 // แก้ไข event hint
 
 const editEventHints = (req:Request<any,any,editEventHintRequest>,res:Response<eventHint>)=>{

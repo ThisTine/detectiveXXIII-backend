@@ -6,6 +6,8 @@ interface Admin {
     email:string
 }
 
+//  Boss ( Nattapat )
+
 // get ข้อมูลของ admin
 
 const getAdmin = (req:Request,res:Response<Admin>)=>{

@@ -8,6 +8,8 @@ interface Hints {
     hints: string[]
 }
 
+// Neng ( stthi )
+
 // เพิ่ม hints ของ user (เช็คด้วยว่ามี hints ครบหรือยัง ถ้าครบแล้วจะเพิ่มไม่ได้)
 
 const sendHints = (req:Request<any,any,HintsRequest>,res:Response<Hints>)=>{

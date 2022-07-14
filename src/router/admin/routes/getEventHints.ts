@@ -9,6 +9,8 @@ export interface EventHints {
     hints:eventHint[]
 }
 
+// Gun ( BlueBox ) && Boss ( Sorrawit )
+
 // getEventhints ทั้งหมด
 
 const getEventHints = (req:Request,res:Response<EventHints>)=>{

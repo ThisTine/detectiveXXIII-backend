@@ -4,6 +4,8 @@ interface Partner {
     partners: {userId:string,name:string,img:{type:"Buffer",data:number[]} | null}[]
 }
 
+// Tine ( Thistine ) & Thun ( Bsthun )
+
 // verify ว่า user คนนั้นได้เปิดสายรหัสไปหรือยัง จาก user_opened_codes 
 // ถ้าเปิดโค้ดที่ id ตรงกับ id ของ partner แล้วก็ให้ return partner คนนั้นตาม response type
 // หรือถ้าโค้ดเราโดนเปิดโดย user id ที่เป็น partner เราแล้ว (เช็คจาก user_opened_code) ก็ให้ return partners เหมือนกัน

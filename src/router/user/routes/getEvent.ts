@@ -4,6 +4,8 @@ interface Event {
     location: string
 }
 
+// Neng ( stthi )
+
 // query hint จาก event_group โดยเอาใน index ที่ event_hints_count
 
 const getEvent = (req:Request,res:Response<Event>)=>{
