@@ -58,7 +58,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie:{domain:process.env.COOKIE_ORIGIN},
-    store:( new SQLiteStore({db:"session.db",dir: path.resolve(__dirname,"db")}) as session.Store) 
+    ...(process.env.NODE_ENV !== "production" && {store:( new SQLiteStore({db:"session.db",dir: path.resolve(__dirname,"db")}) as session.Store) })
 }))
 
 
