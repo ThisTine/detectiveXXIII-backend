@@ -24,6 +24,10 @@ export interface eventGroups {
 const randomEventGroup = async (req: Request, res: Response<eventGroups>) => {
     try {
         const { prisma } = req
+        // TODO:
+        // query to get all user (array)
+        // shuffle and divide them equally for db
+        // insert into db:event_group (create)
     } catch (err: any) {
         res.send(err)
     }
