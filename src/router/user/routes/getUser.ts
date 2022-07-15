@@ -18,8 +18,8 @@ interface User {
 
 // เอา status ของ user ออกมาเพื่อ initialized user ก่อนเล่นเกม
 
-const getUser = (req:Request,res:Response<User | string>)=>{
-    res.send("test")
+const getUser = async (req:Request,res:Response<User | string>)=>{
+
 }
 
 export default getUser
