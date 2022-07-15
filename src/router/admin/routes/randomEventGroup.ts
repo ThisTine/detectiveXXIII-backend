@@ -22,6 +22,11 @@ export interface eventGroups {
 
 // random user ทั้งหมด เข้าไป event group อย่างละเท่า ๆ กัน
 
+// TODO:
+// query to get all user (array)
+// shuffle and divide them equally for db
+// insert into db:event_group (create)
+
 const randomEventGroup = async (req: Request, res: Response<eventGroups>) => {
   try {
     const { prisma } = req;
@@ -89,10 +94,6 @@ const randomEventGroup = async (req: Request, res: Response<eventGroups>) => {
         users: item.users,
       })),
     });
-    // TODO:
-    // query to get all user (array)
-    // shuffle and divide them equally for db
-    // insert into db:event_group (create)
   } catch (err: any) {
     res.send(err);
   }
