@@ -21,8 +21,12 @@ export interface eventGroups {
 
 // random user ทั้งหมด เข้าไป event group อย่างละเท่า ๆ กัน
 
-const randomEventGroup = (req: Request, res: Response<eventGroups>) => {
-
+const randomEventGroup = async (req: Request, res: Response<eventGroups>) => {
+    try {
+        const { prisma } = req
+    } catch (err: any) {
+        res.send(err)
+    }
 }
 
 export default randomEventGroup
