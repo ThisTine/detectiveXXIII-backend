@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 
-interface deleteEventGroupRequestResponse
-{
+
+interface deleteEventGroupRequestResponse {
+
     id: string
 }
 
 // Gun ( BlueBox ) && Boss ( Sorrawit )
 
 // ลบ event_group
-
 
 const deleteEventGroup = async ( req: Request<any, any, deleteEventGroupRequestResponse>, res: Response<deleteEventGroupRequestResponse> ) =>
 {
