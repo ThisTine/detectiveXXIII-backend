@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { Request, Response } from "express"
 
 export type eventHint = {
-    id: string,
+    id: string
     location: string
 }
 
@@ -20,8 +20,8 @@ const getEventHints = async (req: Request, res: Response<EventHints>) => {
         res.send({
             hints: result.map((item) => ({
                 id: item.id,
-                location: item.text
-            }))
+                location: item.text,
+            })),
         })
     } catch (err: any) {
         res.send(err)

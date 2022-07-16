@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { eventHint } from "./getEventHints";
+import { Request, Response } from "express"
+import { eventHint } from "./getEventHints"
 
 interface editEventHintRequest {
     id: string
@@ -15,11 +15,11 @@ const editEventHints = async (req: Request<any, any, editEventHintRequest>, res:
         const { prisma } = req
         const result = await prisma.event_Hint.update({
             where: {
-                id: req.body.id
+                id: req.body.id,
             },
             data: {
-                text: req.body.location
-            }
+                text: req.body.location,
+            },
         })
         res.send({ id: result.id, location: result.text })
     } catch (err: any) {
