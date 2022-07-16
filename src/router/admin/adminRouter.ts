@@ -15,39 +15,42 @@ import getEventHints from './routes/getEventHints'
 import deleteEventhint from './routes/deleteEventhint'
 import createEventHint from './routes/createEventHint'
 import { authAdmin } from '../../middleware/auth'
+import editEventHints from './routes/editEventHints'
 const adminRouter = express.Router()
 
-adminRouter.use(cors({allowedHeaders:["GET","POST","PUT","DELETE"],origin:process.env.APP_ADMIN}))
+adminRouter.use( cors( { allowedHeaders: [ "GET", "POST", "PUT", "DELETE" ], origin: process.env.APP_ADMIN } ) )
 
-adminRouter.use(json())
+adminRouter.use( json() )
 
-adminRouter.get("/", authAdmin ,getAdmin)
+adminRouter.get( "/", authAdmin, getAdmin )
 
-adminRouter.get("/users", authAdmin , getUsers)
+adminRouter.get( "/users", authAdmin, getUsers )
 
-adminRouter.get("/codes", authAdmin ,getCodes)
+adminRouter.get( "/codes", authAdmin, getCodes )
 
-adminRouter.delete("/user", authAdmin ,deleteUser)
+adminRouter.delete( "/user", authAdmin, deleteUser )
 
-adminRouter.get("/config", authAdmin ,getGameConfig)
+adminRouter.get( "/config", authAdmin, getGameConfig )
 
-adminRouter.put("/config", authAdmin, putGameConfig)
+adminRouter.put( "/config", authAdmin, putGameConfig )
 
-adminRouter.get("/event/random", authAdmin, randomEventGroup)
+adminRouter.get( "/event/random", authAdmin, randomEventGroup )
 
-adminRouter.get("/eventgroup", authAdmin, getEventGroups)
+adminRouter.get( "/eventgroup", authAdmin, getEventGroups )
 
-adminRouter.post("/eventgroup", authAdmin, createEventGroup)
+adminRouter.post( "/eventgroup", authAdmin, createEventGroup )
 
-adminRouter.delete("/eventgroup", authAdmin, deleteEventGroup)
+adminRouter.delete( "/eventgroup", authAdmin, deleteEventGroup )
 
-adminRouter.put("/eventgroup", authAdmin, putEventHintsToGroup)
+adminRouter.put( "/eventgroup", authAdmin, putEventHintsToGroup )
 
-adminRouter.get("/event/hint", authAdmin, getEventHints)
+adminRouter.get( "/event/hint", authAdmin, getEventHints )
 
-adminRouter.delete("/event/hint", authAdmin, deleteEventhint)
+adminRouter.put( "/event/hint", authAdmin, editEventHints )
 
-adminRouter.post("/event/hint", authAdmin, createEventHint)
+adminRouter.delete( "/event/hint", authAdmin, deleteEventhint )
+
+adminRouter.post( "/event/hint", authAdmin, createEventHint )
 
 
 
