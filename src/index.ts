@@ -83,13 +83,13 @@ app.use((req, _, next) => {
     next()
 })
 
-app.use("/", publicRouter)
-
 app.use("/auth", authRouter)
 
 app.use("/admin", adminRouter)
 
 app.use("/user", userRouter)
+
+app.use("/", publicRouter)
 
 app.listen(8000, () => {
     console.log("running on 8000")
