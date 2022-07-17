@@ -1,18 +1,19 @@
-import { Request, Response } from "express";
+import { Request, Response } from "express"
 
-export interface gameConfig { 
-    isGameReady: boolean, 
-    isEventReady: boolean }
+export interface gameConfig {
+    isGameReady: boolean
+    isEventReady: boolean
+}
 
 // Tine ( Thistine ) & Thun ( Bsthun )
 
 // เปลี่ยน game config
 
-const putGameConfig = (req:Request<any,any,gameConfig,any>,res:Response<gameConfig>)=>{
-    try{
+const putGameConfig = (req: Request<any, any, gameConfig, any>, res: Response<gameConfig>) => {
+    try {
         req.setGameConfig(req.body)
         return res.send(req.gameConfig)
-    }catch(err:any){
+    } catch (err: any) {
         return res.status(500).send(err)
     }
 }
