@@ -46,6 +46,7 @@ model User_Opened_Code {
 model Code {
   id                String             @id @default(cuid())
   name              String
+  expire_date       DateTime?
   type              CodeType
   user_id           String?            @unique
   user              User?              @relation(fields: [user_id], references: [id])
