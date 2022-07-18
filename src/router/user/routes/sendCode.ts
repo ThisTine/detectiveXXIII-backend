@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client"
+import { CodeType, Event_Group, Prisma, Room } from "@prisma/client"
 import { Request, Response } from "express"
 
 interface sendCode {
@@ -38,16 +38,71 @@ const applyforroom = async (req: Request<any, any, sendCodeBody, any>, res: Resp
     }
 }
 
+const applyforparing = async (
+    req: Request<any, any, sendCodeBody, any>,
+    res: Response<sendCode>,
+    code: { id: string; expire_date: Date | null; type: CodeType },
+    room: Room & {
+        users: {
+            id: string
+        }[]
+    }
+) => {
+    try {
+        const { prisma } = req
+        if (room.users.map((item) => item.id).includes(code.id)) {
+            await prisma.user_Opened_Code.create({ data: { code_id: code.id, user_id: req.user?.id || "" } })
+            res.send({ status: "paring_success" })
+        } else {
+            await prisma.user_Opened_Code.create({ data: { code_id: code.id, user_id: req.user?.id || "" } })
+            res.send({ status: "paring_fail" })
+        }
+    } catch (err: any) {
+        res.status(500).send(err.toString())
+    }
+}
+
+const applyforevent = async (
+    req: Request<any, any, sendCodeBody, any>,
+    res: Response<sendCode | string>,
+    code: { id: string; expire_date: Date | null; type: CodeType },
+    user: { opened_hints: number; event_group: Event_Group | null }
+) => {
+    try {
+        const { prisma } = req
+        if (!user.event_group) return res.status(400).send("No event group")
+        // const hint = await prisma.event_Group.findFirst({
+        //     where: { id: user.event_group.id },
+        //     select: { eventOnhints: { skip: user.opened_hints,take:1, select: { hint: { include: { code: { select: { id: true } } } } } } },
+        // })
+        const hint = await prisma.event_Group_On_Hint.findFirst({ where: { group_id: user.event_group.id }, skip: user.opened_hints })
+        if (!hint) return res.status(400).send("Hint not found")
+        // if(hint.eventOnhints.)
+    } catch (err) {}
+}
+
 const sendCode = async (req: Request<any, any, sendCodeBody, any>, res: Response<sendCode>) => {
     try {
         if (!req.user) throw new Error("No user")
         const { prisma } = req
-        const user = await prisma.user.findFirst({ where: { id: req.user.id }, select: { room: true } })
+        const user = await prisma.user.findFirst({
+            where: { id: req.user.id },
+            select: { room: { include: { users: { select: { id: true } } } }, lifes: true, opened_hints: true, event_group: true },
+        })
         if (!user) throw new Error("No user")
         if (!user.room) {
             return applyforroom(req, res)
         } else {
-            const code = await prisma.code.findFirst({ where: { name: req.body.code } })
+            const code = await prisma.code.findFirst({ where: { name: req.body.code }, select: { expire_date: true, id: true, type: true } })
+            if (!code) throw new Error("Code not found")
+            if (code.expire_date && code.expire_date.getTime() < Date.now()) throw new Error("Code expired")
+            if (code.type === "PARING") {
+                if (user.lifes <= 0) throw new Error("insufficient lifes")
+                return applyforparing(req, res, code, user.room)
+            }
+            if (code.type === "EVENT") {
+                return applyforevent(req, res, code, user)
+            }
         }
     } catch (err: Prisma.RejectPerOperation | Prisma.RejectOnNotFound | any) {
         return res.status(400).send(err.toString())

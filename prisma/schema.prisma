@@ -46,9 +46,9 @@ model User_Opened_Code {
 model Code {
   id                String             @id @default(cuid())
   name              String
-  expire_date       DateTime?
   type              CodeType
   user_id           String?            @unique
+  expire_date       DateTime?
   user              User?              @relation(fields: [user_id], references: [id])
   event_group_hint  Event_Hint?
   users_opened_code User_Opened_Code[]
