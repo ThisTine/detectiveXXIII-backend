@@ -4,18 +4,10 @@ import passport from "passport"
 
 const authRouter = express.Router()
 
-const whitelist = [process.env.APP_URL || "", process.env.ADMIN_URL || ""]
-
 authRouter.use(
     cors({
         allowedHeaders: ["GET", "POST"],
-        origin: function (origin, callback) {
-            if (whitelist.indexOf(origin as string) !== -1 || !origin) {
-                callback(null, true)
-            } else {
-                callback(new Error("Not allowed by CORS"))
-            }
-        },
+        origin: [process.env.APP_URL || "", process.env.ADMIN_URL || ""],
         credentials: true,
     })
 )
