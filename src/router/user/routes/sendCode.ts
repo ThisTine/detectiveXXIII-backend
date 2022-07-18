@@ -11,7 +11,7 @@ interface sendCodeBody {
     code: string
 }
 
-//Boss ( Nattapat )
+// Tine (Thistine)
 
 // เปิดโค้ดต่าง ๆ
 // เปิดโค้ดมี 2 แบบ คือเปิด paring code (โค้ดจับคู่พี่รหัสตอนเข้าเกม)
@@ -66,28 +66,46 @@ const applyforevent = async (
     req: Request<any, any, sendCodeBody, any>,
     res: Response<sendCode | string>,
     code: { id: string; expire_date: Date | null; type: CodeType },
-    user: { opened_hints: number; event_group: Event_Group | null }
+    user: { id: string; event_hints_count: number; event_group: Event_Group | null; opened_hints: number }
 ) => {
     try {
         const { prisma } = req
         if (!user.event_group) return res.status(400).send("No event group")
-        // const hint = await prisma.event_Group.findFirst({
-        //     where: { id: user.event_group.id },
-        //     select: { eventOnhints: { skip: user.opened_hints,take:1, select: { hint: { include: { code: { select: { id: true } } } } } } },
-        // })
-        const hint = await prisma.event_Group_On_Hint.findFirst({ where: { group_id: user.event_group.id }, skip: user.opened_hints })
+        const hint = await prisma.event_Group_On_Hint.findFirst({
+            where: { group_id: user.event_group.id },
+            skip: user.event_hints_count,
+            select: { hint: { select: { code_id: true } } },
+        })
         if (!hint) return res.status(400).send("Hint not found")
-        // if(hint.eventOnhints.)
-    } catch (err) {}
+        if (hint.hint.code_id === code.id) {
+            await prisma.user.update({ where: { id: user.id }, data: { event_hints_count: { increment: 1 }, opened_hints: { increment: 1 } } })
+            const eventhint = await prisma.event_Group_On_Hint.findFirst({
+                where: { group_id: user.event_group.id },
+                skip: user.event_hints_count + 1,
+                select: { hint: { select: { text: true } } },
+            })
+            const userhint = await prisma.hint.findFirst({ where: { user_id: user.id }, skip: user.opened_hints + 1, select: { text: true } })
+            res.send({ status: "event", event_next_hint: eventhint?.hint.text || "Finish !", opened_hint: userhint?.text || "No hint to open !" })
+        }
+    } catch (err: any) {
+        res.status(500).send(err.toString())
+    }
 }
 
-const sendCode = async (req: Request<any, any, sendCodeBody, any>, res: Response<sendCode>) => {
+const sendCode = async (req: Request<any, any, sendCodeBody, any>, res: Response<sendCode | string>) => {
     try {
         if (!req.user) throw new Error("No user")
         const { prisma } = req
         const user = await prisma.user.findFirst({
             where: { id: req.user.id },
-            select: { room: { include: { users: { select: { id: true } } } }, lifes: true, opened_hints: true, event_group: true },
+            select: {
+                room: { include: { users: { select: { id: true } } } },
+                lifes: true,
+                event_hints_count: true,
+                event_group: true,
+                opened_hints: true,
+                id: true,
+            },
         })
         if (!user) throw new Error("No user")
         if (!user.room) {
@@ -103,6 +121,7 @@ const sendCode = async (req: Request<any, any, sendCodeBody, any>, res: Response
             if (code.type === "EVENT") {
                 return applyforevent(req, res, code, user)
             }
+            res.status(500).send("internal server error")
         }
     } catch (err: Prisma.RejectPerOperation | Prisma.RejectOnNotFound | any) {
         return res.status(400).send(err.toString())
