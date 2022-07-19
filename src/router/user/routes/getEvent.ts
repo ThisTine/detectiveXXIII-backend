@@ -8,8 +8,12 @@ interface Event {
 
 // query hint จาก event_group โดยเอาใน index ที่ event_hints_count
 
-const getEvent = (req:Request,res:Response<Event>)=>{
-
+const getEvent = async(req:Request,res:Response<Event>)=>{
+    try {
+        
+    } catch (error : any) {
+        
+    }
 }
 
 export default getEvent
