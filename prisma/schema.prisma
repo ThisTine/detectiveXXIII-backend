@@ -8,23 +8,24 @@ datasource db {
 }
 
 model User {
-  id                String             @id @default(uuid())
-  name              String
-  email             String
-  year              Int                @default(2)
-  lifes             Int                @default(5)
-  event_group_id    String?
-  event_hints_count Int                @default(0)
-  opened_hints      Int                @default(0)
-  img               Bytes?
-  room_id           String?
-  isAdmin           Boolean            @default(false)
-  isPlayable        Boolean            @default(true)
-  event_group       Event_Group?       @relation(fields: [event_group_id], references: [id])
-  room              Room?              @relation(fields: [room_id], references: [id])
-  code              Code?
-  hints             Hint[]
-  user_opened_codes User_Opened_Code[]
+  id                 String             @id @default(uuid())
+  name               String
+  email              String
+  year               Int                @default(2)
+  lifes              Int                @default(5)
+  event_group_id     String?
+  event_hints_count  Int                @default(0)
+  opened_hints       Int                @default(0)
+  img                Bytes?
+  room_id            String?
+  isAdmin            Boolean            @default(false)
+  isPlayable         Boolean            @default(true)
+  opened_event_hints Int                @default(0)
+  event_group        Event_Group?       @relation(fields: [event_group_id], references: [id])
+  room               Room?              @relation(fields: [room_id], references: [id])
+  code               Code?
+  hints              Hint[]
+  user_opened_codes  User_Opened_Code[]
 }
 
 model Hint {
@@ -48,6 +49,7 @@ model Code {
   name              String
   type              CodeType
   user_id           String?            @unique
+  expire_date       DateTime?
   user              User?              @relation(fields: [user_id], references: [id])
   event_group_hint  Event_Hint?
   users_opened_code User_Opened_Code[]

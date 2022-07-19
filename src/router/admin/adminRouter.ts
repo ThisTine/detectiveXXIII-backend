@@ -21,11 +21,12 @@ const adminRouter = express.Router()
 adminRouter.use(
     cors({
         allowedHeaders: ["GET", "POST", "PUT", "DELETE"],
-        origin: process.env.APP_ADMIN,
+        origin: process.env.ADMIN_URL || "",
+        credentials: true,
     })
 )
 
-adminRouter.use( json() )
+adminRouter.use(json())
 
 adminRouter.get("/", authAdmin, getAdmin)
 
@@ -37,24 +38,24 @@ adminRouter.delete("/user", authAdmin, deleteUser)
 
 adminRouter.get("/config", authAdmin, getGameConfig)
 
-adminRouter.put( "/config", authAdmin, putGameConfig )
+adminRouter.put("/config", authAdmin, putGameConfig)
 
-adminRouter.get( "/event/random", authAdmin, randomEventGroup )
+adminRouter.get("/event/random", authAdmin, randomEventGroup)
 
-adminRouter.get( "/eventgroup", authAdmin, getEventGroups )
+adminRouter.get("/eventgroup", authAdmin, getEventGroups)
 
-adminRouter.post( "/eventgroup", authAdmin, createEventGroup )
+adminRouter.post("/eventgroup", authAdmin, createEventGroup)
 
-adminRouter.delete( "/eventgroup", authAdmin, deleteEventGroup )
+adminRouter.delete("/eventgroup", authAdmin, deleteEventGroup)
 
-adminRouter.put( "/eventgroup", authAdmin, putEventHintsToGroup )
+adminRouter.put("/eventgroup", authAdmin, putEventHintsToGroup)
 
-adminRouter.get( "/event/hint", authAdmin, getEventHints )
+adminRouter.get("/event/hint", authAdmin, getEventHints)
 
-adminRouter.put( "/event/hint", authAdmin, editEventHints )
+adminRouter.put("/event/hint", authAdmin, editEventHints)
 
-adminRouter.delete( "/event/hint", authAdmin, deleteEventhint )
+adminRouter.delete("/event/hint", authAdmin, deleteEventhint)
 
-adminRouter.post( "/event/hint", authAdmin, createEventHint )
+adminRouter.post("/event/hint", authAdmin, createEventHint)
 
 export default adminRouter
