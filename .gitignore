@@ -1,4 +1,7 @@
 node_modules
 build
-
+src/db/*.db
 .env
+.env*
+
+env
