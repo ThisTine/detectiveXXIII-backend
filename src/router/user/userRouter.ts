@@ -14,7 +14,7 @@ const userRouter = express.Router()
 
 userRouter.use(
     cors({
-        allowedHeaders: ["GET", "POST"],
+        methods: ["GET", "POST"],
         origin: process.env.APP_URL,
         credentials: true,
     })

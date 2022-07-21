@@ -6,7 +6,7 @@ const authRouter = express.Router()
 
 authRouter.use(
     cors({
-        allowedHeaders: ["GET", "POST"],
+        methods: ["GET", "POST"],
         origin: [process.env.APP_URL || "", process.env.ADMIN_URL || ""],
         credentials: true,
     })

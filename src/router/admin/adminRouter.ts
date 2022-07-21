@@ -20,7 +20,7 @@ const adminRouter = express.Router()
 
 adminRouter.use(
     cors({
-        allowedHeaders: ["GET", "POST", "PUT", "DELETE"],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         origin: process.env.ADMIN_URL || "",
         credentials: true,
     })
