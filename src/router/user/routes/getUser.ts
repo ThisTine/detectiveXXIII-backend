@@ -12,6 +12,7 @@ interface User {
     status: userStatusType
     isGameReady: boolean
     partnerCount: number
+    img: Buffer | null
 }
 
 //  Boss ( Nattapat )
@@ -31,6 +32,7 @@ const getUser = async (req: Request, res: Response<User | string>) => {
                 email: true,
                 year: true,
                 lifes: true,
+                img: true,
                 hints: {
                     select: {
                         id: true,
@@ -61,6 +63,7 @@ const getUser = async (req: Request, res: Response<User | string>) => {
             partnerCount: userq.room?.user_count || 0,
             status: userStatusType(),
             year: userq.year,
+            img: userq.img,
         }
         res.send(resformat)
     } catch (err: any) {
