@@ -67,7 +67,7 @@ const getUser = async (req: Request, res: Response<User | string>) => {
         }
         res.send(resformat)
     } catch (err: any) {
-        res.send(err)
+        res.status(500).send(err)
     }
 }
 

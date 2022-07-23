@@ -36,7 +36,7 @@ const getCodes = async (req: Request, res: Response<CodeList>) => {
 
         res.send({ rooms: Room_Codes, events: code_Egroup })
     } catch (err: any) {
-        res.send(err)
+        res.status(500).send(err)
     }
 }
 

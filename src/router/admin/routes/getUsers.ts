@@ -50,7 +50,7 @@ const getUsers = async (req: Request, res: Response<UserList>) => {
         }
         res.send(mapdata)
     } catch (err: any) {
-        res.send(err)
+        res.status(500).send(err)
     }
 }
 
