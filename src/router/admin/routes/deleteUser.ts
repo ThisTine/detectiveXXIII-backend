@@ -16,7 +16,7 @@ const deleteUser = async (req: Request<any, any, DeletedUser>, res: Response<Del
             if (fuser.room.user_count === 1) {
                 await prisma.room.delete({ where: { id: fuser.room.id } })
             } else {
-                await prisma.room.update({ where: { id: fuser.room.id }, data: { user_count: { decrement: -1 } } })
+                await prisma.room.update({ where: { id: fuser.room.id }, data: { user_count: { decrement: 1 } } })
             }
         }
         const user = prisma.user.delete({ where: { id: req.body.id } })
