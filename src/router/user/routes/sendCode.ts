@@ -50,7 +50,16 @@ const applyforparing = async (
 ) => {
     try {
         const { prisma } = req
-        if (room.users.map((item) => item.id).includes(code.id)) {
+        if (code.id === req.user?.id) {
+            res.status(400).send("Cannot use code that refer to yourself" as any)
+            throw new Error("Cannot use code that refer to yourself")
+        }
+        if (
+            room.users
+                .filter((item) => item.id !== req.user?.id)
+                .map((item) => item.id)
+                .includes(code.id)
+        ) {
             await prisma.user_Opened_Code.create({ data: { code_id: code.id, user_id: req.user?.id || "" } })
             res.send({ status: "paring_success" })
         } else {
