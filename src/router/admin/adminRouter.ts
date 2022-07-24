@@ -46,7 +46,7 @@ adminRouter.get("/config", getGameConfig)
 
 adminRouter.put("/config", putGameConfig)
 
-adminRouter.get("/event/random", randomEventGroup)
+adminRouter.post("/event/random", randomEventGroup)
 
 adminRouter.get("/eventgroup", getEventGroups)
 
