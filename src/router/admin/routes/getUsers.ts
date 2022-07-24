@@ -2,7 +2,16 @@ import { Request, Response } from "express"
 import { userStatusType } from "../../user/routes/getUser"
 
 interface UserList {
-    users: { id: string; name: string; email: string; year: number; lifes: number; status: userStatusType; partnerCount: number }[]
+    users: {
+        id: string
+        name: string
+        email: string
+        year: number
+        lifes: number
+        isPlayable: boolean
+        status: userStatusType
+        partnerCount: number
+    }[]
 }
 
 //Boss ( Nattapat )
@@ -24,6 +33,7 @@ const getUsers = async (req: Request, res: Response<UserList>) => {
                 email: true,
                 year: true,
                 lifes: true,
+                isPlayable: true,
                 hints: {
                     select: {
                         id: true,
@@ -43,6 +53,7 @@ const getUsers = async (req: Request, res: Response<UserList>) => {
                 id: item.id,
                 lifes: item.lifes,
                 name: item.name,
+                isPlayable: item.isPlayable,
                 partnerCount: item.room?.user_count || 0,
                 status: userStatusType(item),
                 year: item.year,
