@@ -1,6 +1,4 @@
-import { KeyObject } from "crypto"
 import { Request, Response } from "express"
-import { join } from "path"
 import { eventGroup } from "./randomEventGroup"
 
 interface createEventGroupRequest {

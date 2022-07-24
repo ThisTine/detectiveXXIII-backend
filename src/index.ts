@@ -56,7 +56,7 @@ app.use(
         secret: process.env.SESSION_SECRET || "",
         resave: false,
         saveUninitialized: false,
-        cookie: { domain: process.env.COOKIE_ORIGIN },
+        cookie: { domain: process.env.COOKIE_ORIGIN, maxAge: 1000 * 60 * 60 * 24 * 30 },
         ...(process.env.NODE_ENV !== "production" && {
             store: new SQLiteStore({
                 db: "session.db",

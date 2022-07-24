@@ -16,6 +16,10 @@ import deleteEventhint from "./routes/deleteEventhint"
 import createEventHint from "./routes/createEventHint"
 import { authAdmin } from "../../middleware/auth"
 import editEventHints from "./routes/editEventHints"
+import { validateMiddleware } from "../../middleware/validate"
+import { CreateEventGroupBody, WithId } from "../../validator/createEventGroupBody"
+import { EditEventHintBody } from "../../validator/editEventHintRequest"
+import { CreateEventHintBody } from "../../validator/createEventHintBody"
 const adminRouter = express.Router()
 
 adminRouter.use(
@@ -36,7 +40,7 @@ adminRouter.get("/users", getUsers)
 
 adminRouter.get("/codes", getCodes)
 
-adminRouter.delete("/user", deleteUser)
+adminRouter.delete("/user", validateMiddleware(WithId), deleteUser)
 
 adminRouter.get("/config", getGameConfig)
 
@@ -46,18 +50,18 @@ adminRouter.get("/event/random", randomEventGroup)
 
 adminRouter.get("/eventgroup", getEventGroups)
 
-adminRouter.post("/eventgroup", createEventGroup)
+adminRouter.post("/eventgroup", validateMiddleware(CreateEventGroupBody), createEventGroup)
 
-adminRouter.delete("/eventgroup", deleteEventGroup)
+adminRouter.delete("/eventgroup", validateMiddleware(WithId), deleteEventGroup)
 
 adminRouter.put("/eventgroup", putEventHintsToGroup)
 
 adminRouter.get("/event/hint", getEventHints)
 
-adminRouter.put("/event/hint", editEventHints)
+adminRouter.put("/event/hint", validateMiddleware(EditEventHintBody), editEventHints)
 
-adminRouter.delete("/event/hint", deleteEventhint)
+adminRouter.delete("/event/hint", validateMiddleware(WithId), deleteEventhint)
 
-adminRouter.post("/event/hint", createEventHint)
+adminRouter.post("/event/hint", validateMiddleware(CreateEventHintBody), createEventHint)
 
 export default adminRouter
