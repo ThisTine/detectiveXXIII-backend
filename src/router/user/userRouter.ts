@@ -1,6 +1,7 @@
 import cors from "cors"
 import express, { json } from "express"
 import { authUser } from "../../middleware/auth"
+import requriedPartner from "../../middleware/requriedPartner"
 import getCode from "./routes/getCode"
 import getEvent from "./routes/getEvent"
 import getHint from "./routes/gethints"
@@ -26,18 +27,18 @@ userRouter.use(authUser)
 
 userRouter.get("/", getUser)
 
-userRouter.get("/event", getEvent)
+userRouter.get("/event", requriedPartner, getEvent)
 
 userRouter.get("/code", getCode)
 
 userRouter.post("/code", sendCode)
 
-userRouter.get("/hints", getHint)
+userRouter.get("/hints", requriedPartner, getHint)
 
 userRouter.post("/hints", sendHints)
 
-userRouter.get("/partners", getPartners)
+userRouter.get("/partners", requriedPartner, getPartners)
 
-userRouter.get("/openhint", openHint)
+userRouter.get("/openhint", requriedPartner, openHint)
 
 export default userRouter

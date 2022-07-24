@@ -28,34 +28,36 @@ adminRouter.use(
 
 adminRouter.use(json())
 
-adminRouter.get("/", authAdmin, getAdmin)
+adminRouter.use(authAdmin)
 
-adminRouter.get("/users", authAdmin, getUsers)
+adminRouter.get("/", getAdmin)
 
-adminRouter.get("/codes", authAdmin, getCodes)
+adminRouter.get("/users", getUsers)
 
-adminRouter.delete("/user", authAdmin, deleteUser)
+adminRouter.get("/codes", getCodes)
 
-adminRouter.get("/config", authAdmin, getGameConfig)
+adminRouter.delete("/user", deleteUser)
 
-adminRouter.put("/config", authAdmin, putGameConfig)
+adminRouter.get("/config", getGameConfig)
 
-adminRouter.get("/event/random", authAdmin, randomEventGroup)
+adminRouter.put("/config", putGameConfig)
 
-adminRouter.get("/eventgroup", authAdmin, getEventGroups)
+adminRouter.get("/event/random", randomEventGroup)
 
-adminRouter.post("/eventgroup", authAdmin, createEventGroup)
+adminRouter.get("/eventgroup", getEventGroups)
 
-adminRouter.delete("/eventgroup", authAdmin, deleteEventGroup)
+adminRouter.post("/eventgroup", createEventGroup)
 
-adminRouter.put("/eventgroup", authAdmin, putEventHintsToGroup)
+adminRouter.delete("/eventgroup", deleteEventGroup)
 
-adminRouter.get("/event/hint", authAdmin, getEventHints)
+adminRouter.put("/eventgroup", putEventHintsToGroup)
 
-adminRouter.put("/event/hint", authAdmin, editEventHints)
+adminRouter.get("/event/hint", getEventHints)
 
-adminRouter.delete("/event/hint", authAdmin, deleteEventhint)
+adminRouter.put("/event/hint", editEventHints)
 
-adminRouter.post("/event/hint", authAdmin, createEventHint)
+adminRouter.delete("/event/hint", deleteEventhint)
+
+adminRouter.post("/event/hint", createEventHint)
 
 export default adminRouter

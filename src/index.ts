@@ -9,6 +9,7 @@ import session, { Store } from "express-session"
 import authRouter from "./router/auth/authRouter"
 import SQLiteConnect from "connect-sqlite3"
 import path from "path"
+import fetchUser from "./middleware/fetchUser"
 const SQLiteStore = SQLiteConnect(session)
 
 let gameConfig = {
@@ -82,6 +83,8 @@ app.use((req, _, next) => {
     req.gameConfig = gameConfig
     next()
 })
+
+app.use(fetchUser)
 
 app.use("/auth", authRouter)
 

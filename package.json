@@ -24,7 +24,7 @@
     "build:webpack": "tsc && webpack --stats-error-details",
     "start": "NODE_ENV=production node ./build/index.js",
     "dev": "tsnd -r dotenv/config --respawn ./src/index.ts",
-    "dev:neng" : "nodemon ./src/index.ts",
+    "dev:neng": "nodemon ./src/index.ts",
     "db:init": "prisma db pull && npm run db:gen",
     "db:gen": "prisma generate",
     "db:migratedev": "prisma migrate dev && npm run db:gen"
@@ -46,6 +46,7 @@
   "dependencies": {
     "@prisma/client": "^4.0.0",
     "axios": "^0.27.2",
+    "class-validator": "^0.13.2",
     "connect-sqlite3": "^0.9.13",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
