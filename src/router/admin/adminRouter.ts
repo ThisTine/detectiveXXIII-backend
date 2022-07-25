@@ -25,10 +25,18 @@ import getRooms from "./routes/getRoom"
 import putUserToRoom, { putUserToRoomBody } from "./routes/putUserToRoom"
 const adminRouter = express.Router()
 
+const getorigins = ()=>{
+    if(process.env.API_STAGE === "staging"){
+        return [process.env.ADMIN_URL || "" , "http://localhost:3000"]
+    }else{
+        return [process.env.ADMIN_URL || ""]
+    }
+}
+
 adminRouter.use(
     cors({
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        origin: process.env.ADMIN_URL || "",
+        origin: getorigins(),
         credentials: true,
     })
 )
