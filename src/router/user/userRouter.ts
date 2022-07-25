@@ -16,18 +16,10 @@ import sendHints from "./routes/sentHints"
 
 const userRouter = express.Router()
 
-const getorigins = ()=>{
-    if(process.env.API_STAGE === "staging"){
-        return [process.env.APP_URL || "" , "http://localhost:3000"]
-    }else{
-        return [process.env.APP_URL || ""]
-    }
-}
-
 userRouter.use(
     cors({
         methods: ["GET", "POST"],
-        origin: getorigins(),
+        origin: process.env.APP_URL || "",
         credentials: true,
     })
 )
