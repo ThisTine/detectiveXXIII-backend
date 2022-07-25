@@ -20,6 +20,14 @@ const getPartners = async (req: Request, res: Response<Partner | String>) => {
         if (!partners || !partners.room || partners.room.user_count <= 1) {
             throw new Error("Partner not found")
         }
+        if (req.gameConfig.isGameEnd) {
+            const users = await prisma.user.findFirst({ where: { id: req.user?.id }, select: { room: { select: { users: true } } } })
+            if (!users || !users.room) {
+                throw new Error("Partner not found")
+            }
+            const resuser = users?.room?.users.filter((item) => item.id !== req.user?.id)
+            return res.send({ partners: resuser.map((item) => ({ img: item.img, name: item.name, userId: item.id })) })
+        }
         const code_ids = partners.room.users.map((item) => ({ code_id: item.id }))
         const user_opened_code = await prisma.user_Opened_Code.findMany({
             where: { user_id: req.user?.id, OR: [...code_ids] },

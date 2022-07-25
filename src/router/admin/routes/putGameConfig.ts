@@ -3,6 +3,7 @@ import { Request, Response } from "express"
 export interface gameConfig {
     isGameReady: boolean
     isEventReady: boolean
+    isGameEnd: boolean
 }
 
 // Tine ( Thistine ) & Thun ( Bsthun )

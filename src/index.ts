@@ -15,12 +15,13 @@ const SQLiteStore = SQLiteConnect(session)
 let gameConfig = {
     isGameReady: false,
     isEventReady: false,
+    isGameEnd:false
 }
 
-type setGameConfigtype = (props: { isGameReady?: boolean; isEventReady?: boolean }) => void
+type setGameConfigtype = (props: { isGameReady?: boolean; isEventReady?: boolean; isGameEnd?:boolean }) => void
 
 const setGameConfig: setGameConfigtype = (props) => {
-    const keys = Object.keys(gameConfig) as ("isGameReady" | "isEventReady")[]
+    const keys = Object.keys(gameConfig) as ("isGameReady" | "isEventReady" | "isGameEnd")[]
     keys.forEach((key) => {
         if (Object.keys(props).includes(key)) {
             gameConfig[key] = props[key] as boolean
