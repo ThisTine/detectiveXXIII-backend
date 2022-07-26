@@ -13,12 +13,12 @@ import fetchUser from "./middleware/fetchUser"
 const SQLiteStore = SQLiteConnect(session)
 
 let gameConfig = {
-    isGameReady: false,
+    isGameReady: true,
     isEventReady: false,
-    isGameEnd:false
+    isGameEnd: false,
 }
 
-type setGameConfigtype = (props: { isGameReady?: boolean; isEventReady?: boolean; isGameEnd?:boolean }) => void
+type setGameConfigtype = (props: { isGameReady?: boolean; isEventReady?: boolean; isGameEnd?: boolean }) => void
 
 const setGameConfig: setGameConfigtype = (props) => {
     const keys = Object.keys(gameConfig) as ("isGameReady" | "isEventReady" | "isGameEnd")[]
