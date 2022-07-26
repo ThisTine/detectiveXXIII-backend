@@ -28,7 +28,7 @@
     "db:init": "prisma db pull && npm run db:gen",
     "db:gen": "prisma generate",
     "db:migratedev": "prisma migrate dev && npm run db:gen",
-    "develop" : "db:init && nodemon ./src/index.ts"
+    "develop" : "npm run db:init && nodemon ./src/index.ts"
   },
   "repository": {
     "type": "git",
