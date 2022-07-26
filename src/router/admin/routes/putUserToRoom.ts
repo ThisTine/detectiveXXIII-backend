@@ -12,62 +12,75 @@ export class putUserToRoomBody {
     userIds: string[]
 }
 
-const putUserToRoom = async (req:Request<any,any,putUserToRoomBody>,res:Response<roomresponse|string>)=>{
-    try{
-        const {prisma} = req
-        if(req.body.roomId){
-            let room:Room & { users : User[] } 
-            try{
-                room = await prisma.room.findFirstOrThrow({where:{id:req.body.roomId},include:{users:true}})
-            }catch(err){
+const putUserToRoom = async (req: Request<any, any, putUserToRoomBody>, res: Response<roomresponse | string>) => {
+    try {
+        const { prisma } = req
+        if (req.body.roomId) {
+            let room: Room & { users: User[] }
+            try {
+                room = await prisma.room.findFirstOrThrow({ where: { id: req.body.roomId }, include: { users: true } })
+            } catch (err) {
                 return res.status(400).send("Couldn't find room")
             }
-            const users = await prisma.user.findMany({where: { OR:[...req.body.userIds.map(item=>({id:item}))], },include:{room:true} })
-            const usersWithdiffids = users.filter(item=>(!item.room_id || item.room_id !== room.id) )
-            if(!([...room.users,...usersWithdiffids].map(item=>item.year).includes(1) && [...room.users,...usersWithdiffids].map(item=>item.year).includes(2))){
+            const users = await prisma.user.findMany({
+                where: { OR: [...req.body.userIds.map((item) => ({ id: item }))] },
+                include: { room: { include: { _count: { select: { users: true } } } } },
+            })
+            const usersWithdiffids = users.filter((item) => !item.room_id || item.room_id !== room.id)
+            if (
+                !(
+                    [...room.users, ...usersWithdiffids].map((item) => item.year).includes(1) &&
+                    [...room.users, ...usersWithdiffids].map((item) => item.year).includes(2)
+                )
+            ) {
                 return res.status(400).send("Room need to be mixed between 1st year and 2nd year")
             }
-            const updateUsers = usersWithdiffids.filter(item=>item.room_id).map(item=> {
-                    if(item.room?.user_count === 1)
-                    return prisma.room.delete({where:{id:item.room_id || ""}})
-                    return prisma.room.update({where:{id:item.room_id || ""},data:{users:{disconnect:{id:item.id}},user_count:{decrement:1}}})
-            } )
+            const updateUsers = usersWithdiffids
+                .filter((item) => item.room && item.room._count.users === 1)
+                .map((item) => prisma.room.delete({ where: { id: item.room_id || "" } }))
 
             await prisma.$transaction(updateUsers)
 
-            console.log(room.user_count+usersWithdiffids.length)
-            
-            if(room.user_count+usersWithdiffids.length > 3){
+            console.log(room.user_count + usersWithdiffids.length)
+
+            if (room.user_count + usersWithdiffids.length > 3) {
                 return res.status(400).send("Maximum amount of people per 1 room is 3")
             }
-            const roomreq = usersWithdiffids.map(({id})=>prisma.room.update({where:{id:room.id},data:{users:{connect:{id}},user_count:{increment:1}}}))
-            
+            const roomreq = usersWithdiffids.map(({ id }) => prisma.room.update({ where: { id: room.id }, data: { users: { connect: { id } } } }))
+
             await prisma.$transaction(roomreq)
 
-            const room1 = await prisma.room.findFirst({select:{id:true,users:{select:{id:true}}},where:{id:req.body.roomId}})
-            if(!room1){
+            const room1 = await prisma.room.findFirst({ select: { id: true, users: { select: { id: true } } }, where: { id: req.body.roomId } })
+            if (!room1) {
                 return res.status(400).send("Couldn't find room")
             }
             return res.send(room1)
-
-        }else{
-            const users = await prisma.user.findMany({where: { OR:[...req.body.userIds.map(item=>({id:item}))], },include:{room:true} })
-            if(!(users.map(item=>item.year).includes(1) && users.map(item=>item.year).includes(2))){
+        } else {
+            const users = await prisma.user.findMany({
+                where: { OR: [...req.body.userIds.map((item) => ({ id: item }))] },
+                include: { room: { include: { _count: { select: { users: true } } } } },
+            })
+            if (!(users.map((item) => item.year).includes(1) && users.map((item) => item.year).includes(2))) {
                 return res.status(400).send("Room need to be mixed between 1st year and 2nd year")
             }
-            if(users.length > 3 || users.length < 1){
+            if (users.length > 3 || users.length < 1) {
                 return res.status(400).send("Maximum amount of people per 1 room is 3")
             }
-            const updateUsers = users.filter(item=>item.room_id).map(item=> {
-                    if(item.room?.user_count === 1)
-                    return prisma.room.delete({where:{id:item.room_id || ""}})
-                    return prisma.room.update({where:{id:item.room_id || ""},data:{users:{disconnect:{id:item.id}},user_count:{decrement:1}}})
-            } )
-            await prisma.$transaction(updateUsers)
-            const room = await prisma.room.create({data:{code:nanoid(7),users:{connect:[...users.map(item=>({id:item.id}))]}},select:{id:true,users:{select:{id:true}}}})
+            // const updateUsers = users
+            //     .filter((item) => item.room && item.room._count.users === 1)
+            //     .map((item) => prisma.room.delete({ where: { id: item.room?.id } }))
+            // await prisma.$transaction(updateUsers)
+            const room = await prisma.room.create({
+                data: { code: nanoid(7), users: { connect: [...users.map((item) => ({ id: item.id }))] } },
+                select: { id: true, users: { select: { id: true } } },
+            })
+            const allrooms = await prisma.room.findMany({ select: { id: true, _count: { select: { users: true } } } })
+            // clean up
+            const ids = await allrooms.filter((item) => !item._count.users).map((item) => item.id)
+            await prisma.room.deleteMany({ where: { OR: [...ids.map((item) => ({ id: item }))] } })
             return res.send(room)
         }
-    }catch(err){
+    } catch (err) {
         res.status(500).send("Internal Server Error")
     }
 }

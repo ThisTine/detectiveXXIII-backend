@@ -11,13 +11,12 @@ interface DeletedUser {
 const deleteUser = async (req: Request<any, any, DeletedUser>, res: Response<DeletedUser>) => {
     try {
         const { prisma } = req
-        const fuser = await prisma.user.findFirst({ where: { id: req.body.id }, select: { room: true, id: true } })
-        if (fuser && fuser.room) {
-            if (fuser.room.user_count === 1) {
-                await prisma.room.delete({ where: { id: fuser.room.id } })
-            } else {
-                await prisma.room.update({ where: { id: fuser.room.id }, data: { user_count: { decrement: 1 } } })
-            }
+        const fuser = await prisma.user.findFirst({
+            where: { id: req.body.id },
+            select: { room: { include: { _count: { select: { users: true } } } }, id: true },
+        })
+        if (fuser && fuser.room && fuser.room._count.users === 1) {
+            await prisma.room.delete({ where: { id: fuser.room.id } })
         }
         const user = prisma.user.delete({ where: { id: req.body.id } })
         const user_Opened_Code = prisma.user_Opened_Code.deleteMany({ where: { user_id: req.body.id } })

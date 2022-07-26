@@ -28,9 +28,8 @@ interface sendCodeBody {
 const applyforroom = async (req: Request<any, any, sendCodeBody, any>, res: Response<sendCode>) => {
     try {
         const { prisma } = req
-        const room = await prisma.room.findFirst({ where: { code: req.body.code, user_count: { lt: 3 } }, select: { id: true, user_count: true } })
-        if (!room) throw new Error("Room not found")
-        await prisma.room.update({ where: { id: room.id }, data: { user_count: { increment: 1 } } })
+        const room = await prisma.room.findFirst({ where: { code: req.body.code }, select: { id: true, _count: { select: { users: true } } } })
+        if (!room || room._count.users) throw new Error("Room not found")
         await prisma.user.update({ where: { id: req.user?.id }, data: { room: { connect: { id: room.id } } } })
         res.send({ status: "paring_with_partner" })
     } catch (err: any) {

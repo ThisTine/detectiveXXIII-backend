@@ -19,7 +19,7 @@ interface UserList {
 // get users ทั้งหมด
 const userStatusType: (userq: any) => userStatusType = (userq) => {
     if (!userq?.hints || userq.hints.length < 10) return "filling_hints"
-    if (!userq.room || userq.room.user_count < 2) return "waiting"
+    if (!userq.room || userq.room._count.users < 2) return "waiting"
     else return "playing"
 }
 
@@ -42,7 +42,7 @@ const getUsers = async (req: Request, res: Response<UserList>) => {
                 },
                 room: {
                     select: {
-                        user_count: true,
+                        _count: { select: { users: true } },
                     },
                 },
             },
@@ -54,7 +54,7 @@ const getUsers = async (req: Request, res: Response<UserList>) => {
                 lifes: item.lifes,
                 name: item.name,
                 isPlayable: item.isPlayable,
-                partnerCount: item.room?.user_count || 0,
+                partnerCount: item.room?._count.users || 0,
                 status: userStatusType(item),
                 year: item.year,
             })),

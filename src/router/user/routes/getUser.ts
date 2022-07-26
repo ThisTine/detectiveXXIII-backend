@@ -41,14 +41,14 @@ const getUser = async (req: Request, res: Response<User | string>) => {
                 },
                 room: {
                     select: {
-                        user_count: true,
+                        _count: { select: { users: true } },
                     },
                 },
             },
         })
         const userStatusType: () => userStatusType = () => {
             if (!userq?.hints || userq.hints.length < 10) return "filling_hints"
-            if (!userq.room || userq.room.user_count < 2) return "waiting"
+            if (!userq.room || userq.room._count.users < 2) return "waiting"
             else return "playing"
         }
         if (!userq) throw new Error("User not found")
@@ -60,7 +60,7 @@ const getUser = async (req: Request, res: Response<User | string>) => {
             isGameReady: req.gameConfig.isGameReady,
             lifes: userq.lifes,
             name: userq.name,
-            partnerCount: userq.room?.user_count || 0,
+            partnerCount: userq.room?._count.users || 0,
             status: userStatusType(),
             year: userq.year,
             img: userq.img,

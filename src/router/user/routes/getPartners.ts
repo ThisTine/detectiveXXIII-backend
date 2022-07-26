@@ -15,9 +15,9 @@ const getPartners = async (req: Request, res: Response<Partner | String>) => {
         const { prisma } = req
         const partners = await prisma.user.findFirst({
             where: { id: req.user?.id },
-            select: { room: { select: { users: { select: { id: true } }, user_count: true } } },
+            select: { room: { select: { users: { select: { id: true } }, _count: { select: { users: true } } } } },
         })
-        if (!partners || !partners.room || partners.room.user_count <= 1) {
+        if (!partners || !partners.room || partners.room._count.users <= 1) {
             throw new Error("Partner not found")
         }
         if (req.gameConfig.isGameEnd) {
