@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 
-export type userStatusType = "filling_hints" | "waiting" | "playing"
+export type userStatusType = "filling_hints" | "waiting" | "playing" | "game_disable"
 
 interface User {
     id: string
@@ -49,6 +49,7 @@ const getUser = async (req: Request, res: Response<User | string>) => {
         const userStatusType: () => userStatusType = () => {
             if (!userq?.hints || userq.hints.length < 10) return "filling_hints"
             if (!userq.room || userq.room._count.users < 2) return "waiting"
+            if (!req.gameConfig.isGameReady) return "game_disable"
             else return "playing"
         }
         if (!userq) throw new Error("User not found")

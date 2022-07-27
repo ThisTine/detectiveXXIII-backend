@@ -15,7 +15,7 @@ const fetchUser = async (req: Request, res: Response, next: NextFunction) => {
             })
         }
         req.user = user
-        next()
+        return next()
     } catch (err) {
         return next()
     }

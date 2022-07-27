@@ -1,6 +1,7 @@
 import cors from "cors"
 import express, { json } from "express"
 import { authUser } from "../../middleware/auth"
+import disableGame from "../../middleware/disableGame"
 import requriedPartner from "../../middleware/requriedPartner"
 import { validateMiddleware } from "../../middleware/validate"
 import { sendCodeBody } from "../../validator/sendCodeBody"
@@ -30,18 +31,18 @@ userRouter.use(authUser)
 
 userRouter.get("/", getUser)
 
-userRouter.get("/event", requriedPartner, getEvent)
+userRouter.get("/event", [disableGame, requriedPartner], getEvent)
 
-userRouter.get("/code", getCode)
+userRouter.get("/code", [disableGame], getCode)
 
 userRouter.post("/code", validateMiddleware(sendCodeBody), sendCode)
 
-userRouter.get("/hints", requriedPartner, getHint)
+userRouter.get("/hints", [disableGame, requriedPartner], getHint)
 
 userRouter.post("/hints", validateMiddleware(SendHints), sendHints)
 
 userRouter.get("/partners", requriedPartner, getPartners)
 
-userRouter.get("/openhint", requriedPartner, openHint)
+userRouter.get("/openhint", [disableGame, requriedPartner], openHint)
 
 export default userRouter
