@@ -64,6 +64,11 @@ const applyforparing = async (
                 update: { code_id: code.id, user_id: req.user?.id || "" },
                 create: { code_id: code.id, user_id: req.user?.id || "" },
             })
+            await prisma.user_Opened_Code.upsert({
+                where: { user_id_code_id: { code_id: req.user?.id || "", user_id: code.id } },
+                update: { code_id: req.user?.id || "", user_id: code.id },
+                create: { code_id: req.user?.id || "", user_id: code.id },
+            })
             res.send({ status: "paring_success" })
         } else {
             await prisma.user_Opened_Code.upsert({
