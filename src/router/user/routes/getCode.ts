@@ -25,6 +25,7 @@ const getCode = async (req: Request, res: Response<Code>) => {
                 expire_date: new Date(Date.now() + 1000 * 90),
             },
             create: {
+                id: req.user?.id,
                 name: nanoid(8),
                 user: {
                     connect: {
