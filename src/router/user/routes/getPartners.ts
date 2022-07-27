@@ -18,12 +18,12 @@ const getPartners = async (req: Request, res: Response<Partner | String>) => {
             select: { room: { select: { users: { select: { id: true } }, _count: { select: { users: true } } } } },
         })
         if (!partners || !partners.room || partners.room._count.users <= 1) {
-            throw new Error("Partner not found")
+            return res.status(400).send("Partner not found")
         }
         if (req.gameConfig.isGameEnd) {
             const users = await prisma.user.findFirst({ where: { id: req.user?.id }, select: { room: { select: { users: true } } } })
             if (!users || !users.room) {
-                throw new Error("Partner not found")
+                return res.status(400).send("Partner not found")
             }
             const resuser = users?.room?.users.filter((item) => item.id !== req.user?.id)
             return res.send({ partners: resuser.map((item) => ({ img: item.img, name: item.name, userId: item.id })) })
@@ -34,11 +34,11 @@ const getPartners = async (req: Request, res: Response<Partner | String>) => {
             select: { user: true },
         })
         if (user_opened_code.length === 0) {
-            res.status(400).json("Game is not complete yet")
+            return res.status(400).json("Game is not complete yet")
         }
-        res.send({ partners: user_opened_code.map((item) => ({ img: item.user.img, name: item.user.name, userId: item.user.id })) })
+        return res.send({ partners: user_opened_code.map((item) => ({ img: item.user.img, name: item.user.name, userId: item.user.id })) })
     } catch (err) {
-        res.status(500).send("Internal server Error")
+        return res.status(500).send("Internal server Error")
     }
 }
 
