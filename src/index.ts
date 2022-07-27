@@ -14,7 +14,7 @@ const SQLiteStore = SQLiteConnect(session)
 
 let gameConfig = {
     isGameReady: true,
-    isEventReady: false,
+    isEventReady: true,
     isGameEnd: false,
 }
 

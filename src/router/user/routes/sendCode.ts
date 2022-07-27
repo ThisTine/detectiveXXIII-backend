@@ -4,7 +4,7 @@ import { Request, Response } from "express"
 interface sendCode {
     status: "paring_with_partner" | "paring_success" | "paring_fail" | "event"
     event_next_hint?: string
-    opened_hint?: string
+    opened_hint?: string[]
 }
 
 interface sendCodeBody {
@@ -95,22 +95,35 @@ const applyforevent = async (
         if (!user.event_group) return res.status(400).send("No event group")
         const hint = await prisma.event_Group_On_Hint.findFirst({
             where: { group_id: user.event_group.id },
-            skip: user.event_hints_count,
-            select: { hint: { select: { code_id: true } } },
+            skip: user.event_hints_count + 1,
+            select: { hint: { select: { code_id: true, text: true } } },
         })
         if (!hint) return res.status(400).send("Hint not found")
         if (hint.hint.code_id === code.id) {
             await prisma.user.update({ where: { id: user.id }, data: { event_hints_count: { increment: 1 }, opened_hints: { increment: 1 } } })
             const eventhint = await prisma.event_Group_On_Hint.findFirst({
                 where: { group_id: user.event_group.id },
-                skip: user.event_hints_count + 1,
+                skip: user.event_hints_count + 2,
                 select: { hint: { select: { text: true } } },
             })
-            const userhint = await prisma.hint.findFirst({ where: { user_id: user.id }, skip: user.opened_hints + 1, select: { text: true } })
-            res.send({ status: "event", event_next_hint: eventhint?.hint.text || "Finish !", opened_hint: userhint?.text || "No hint to open !" })
+            const userhint = await prisma.user.findFirst({
+                where: { id: req.user?.id },
+                select: { room: { select: { users: { select: { id: true, hints: { take: 1, skip: user.event_hints_count + 1 } } } } } },
+            })
+            let hints: string[] = []
+            const partners = userhint?.room?.users.filter((item) => item.id !== user.id)
+            partners?.forEach((item) => {
+                item.hints.forEach((e) => hints.push(e.text))
+            })
+            return res.send({
+                status: "event",
+                event_next_hint: eventhint?.hint.text || "Finish !",
+                opened_hint: hints,
+            })
         }
+        return res.status(400).send("This code does not belong to " + hint.hint.text)
     } catch (err: any) {
-        res.status(500).send(err.toString())
+        return res.status(500).send(err.toString())
     }
 }
 
