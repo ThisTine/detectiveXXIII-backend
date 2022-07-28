@@ -10,9 +10,12 @@ import { getAllhints, Hint } from "./gethints"
 const openHint = async (req: Request, res: Response<Hint | String>) => {
     try {
         const { prisma } = req
-        const life = await prisma.user.findFirst({ select: { lifes: true }, where: { id: req.user?.id } })
+        const life = await prisma.user.findFirst({ select: { lifes: true, opened_hints: true }, where: { id: req.user?.id } })
         if ((life?.lifes || 0) < 3) {
             return res.status(400).send("insufficient lifes")
+        }
+        if ((life?.opened_hints || 11) > 10) {
+            return res.status(400).send("Already opened all hints")
         }
         await prisma.user.update({ where: { id: req.user?.id || "" }, data: { opened_hints: { increment: 1 }, lifes: { decrement: 3 } } })
         const getResponse = await getAllhints(req)
