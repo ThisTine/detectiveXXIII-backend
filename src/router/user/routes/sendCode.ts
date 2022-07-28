@@ -95,7 +95,8 @@ const applyforevent = async (
         if (!user.event_group) return res.status(400).send("No event group")
         const hint = await prisma.event_Group_On_Hint.findFirst({
             where: { group_id: user.event_group.id },
-            skip: user.event_hints_count + 1,
+            skip: user.event_hints_count,
+            orderBy: { group_id: "asc" },
             select: { hint: { select: { code_id: true, text: true } } },
         })
         if (!hint) return res.status(400).send("Hint not found")
@@ -103,7 +104,8 @@ const applyforevent = async (
             await prisma.user.update({ where: { id: user.id }, data: { event_hints_count: { increment: 1 }, opened_hints: { increment: 1 } } })
             const eventhint = await prisma.event_Group_On_Hint.findFirst({
                 where: { group_id: user.event_group.id },
-                skip: user.event_hints_count + 2,
+                skip: user.event_hints_count + 1,
+                orderBy: { group_id: "asc" },
                 select: { hint: { select: { text: true } } },
             })
             const userhint = await prisma.user.findFirst({
@@ -117,7 +119,7 @@ const applyforevent = async (
             })
             return res.send({
                 status: "event",
-                event_next_hint: eventhint?.hint.text || "Finish !",
+                event_next_hint: eventhint?.hint.text,
                 opened_hint: hints,
             })
         }
@@ -154,9 +156,10 @@ const sendCode = async (req: Request<any, any, sendCodeBody, any>, res: Response
                 return applyforparing(req, res, code, user.room)
             }
             if (code.type === "EVENT") {
+                if (user.opened_hints >= 10) return res.status(400).send("Already opened hints")
                 return applyforevent(req, res, code, user)
             }
-            res.status(500).send("internal server error")
+            return res.status(500).send("internal server error")
         }
     } catch (err: Prisma.RejectPerOperation | Prisma.RejectOnNotFound | any) {
         return res.status(400).send(err.toString())
