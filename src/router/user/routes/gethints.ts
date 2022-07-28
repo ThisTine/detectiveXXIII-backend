@@ -11,10 +11,15 @@ export interface Hint {
 // userId ที่มีเค้าอยากให้เป็น fake userid หรือก็คือจะมีแค่ 1 หรือ 2 เท่านั้น
 export const getAllhints: (req: Request) => Promise<Hint> = async (req) => {
     const { prisma } = req
-    const opened_hints = await prisma.user.findFirst({
+    let opened_hints = await prisma.user.findFirst({
         where: { id: req.user?.id },
         select: { opened_hints: true, room: { select: { users: { select: { id: true, hints: true } } } } },
     })
+    if (!opened_hints) throw new Error("Couldn't find user")
+    if (opened_hints.opened_hints > 10) {
+        opened_hints.opened_hints = 10
+        await prisma.user.update({ where: { id: req.user?.id }, data: { opened_hints: 10 } })
+    }
     const users = opened_hints?.room?.users.filter((e) => e.id !== (req.user?.id || ""))
     let response: { userId: 1 | 2; hint: string; isShow: boolean }[] = []
     users?.forEach((item, index) => {

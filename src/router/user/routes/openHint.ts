@@ -18,6 +18,7 @@ const openHint = async (req: Request, res: Response<Hint | String>) => {
         await prisma.user.update({ where: { id: req.user?.id || "" }, data: { opened_hints: { increment: 1 }, lifes: { decrement: 3 } } })
         const hints = await prisma.user.findFirst({ select: { opened_hints: true }, where: { id: req.user?.id } })
         if (!hints || hints.opened_hints > 10) {
+            await prisma.user.update({ where: { id: req.user?.id }, data: { opened_hints: 10 } })
             return res.status(400).send("Already opened all hints")
         }
         const getResponse = await getAllhints(req)
