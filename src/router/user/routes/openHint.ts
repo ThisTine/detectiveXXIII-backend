@@ -14,7 +14,7 @@ const openHint = async (req: Request, res: Response<Hint | String>) => {
         if ((life?.lifes || 0) < 3) {
             return res.status(400).send("insufficient lifes")
         }
-        await prisma.user.update({ where: { id: req.user?.id || "" }, data: { opened_hints: { increment: 1 } } })
+        await prisma.user.update({ where: { id: req.user?.id || "" }, data: { opened_hints: { increment: 1 }, lifes: { decrement: 3 } } })
         const getResponse = await getAllhints(req)
         return res.send(getResponse)
     } catch (error: any) {
