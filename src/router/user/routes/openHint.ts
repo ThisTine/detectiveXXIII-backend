@@ -12,13 +12,13 @@ const openHint = async (req: Request, res: Response<Hint | String>) => {
         const { prisma } = req
         const life = await prisma.user.findFirst({ select: { lifes: true }, where: { id: req.user?.id } })
         if ((life?.lifes || 0) < 3) {
-            res.status(400).send("insufficient lifes")
+            return res.status(400).send("insufficient lifes")
         }
         await prisma.user.update({ where: { id: req.user?.id || "" }, data: { opened_hints: { increment: 1 } } })
         const getResponse = await getAllhints(req)
-        res.send(getResponse)
+        return res.send(getResponse)
     } catch (error: any) {
-        res.send(error)
+        return res.send(error)
     }
 }
 
