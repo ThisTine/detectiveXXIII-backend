@@ -66,9 +66,9 @@ const getUser = async (req: Request, res: Response<User | string>) => {
             year: userq.year,
             img: userq.img,
         }
-        res.send(resformat)
+        return res.send(resformat)
     } catch (err: any) {
-        res.status(500).send(err)
+        return res.status(500).send(err)
     }
 }
 

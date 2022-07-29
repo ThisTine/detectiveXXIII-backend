@@ -18,9 +18,9 @@ const deleteEventhint = async (req: Request<any, any, eventHintReq>, res: Respon
                 id: req.body.id,
             },
         })
-        res.send({ id: result.id, location: result.text })
+        return res.send({ id: result.id, location: result.text })
     } catch (err: any) {
-        res.send(err)
+        return res.send(err)
     }
 }
 

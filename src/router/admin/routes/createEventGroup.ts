@@ -26,9 +26,9 @@ const createEventGroup = async (req: Request<any, any, createEventGroupRequest>,
             hints: group.eventOnhints.map((item) => ({ location: item.hint.text, id: item.hint.id })),
         }
         console.log(group)
-        res.send(rlakesponse)
+        return res.send(rlakesponse)
     } catch (err: any) {
-        res.send(err)
+        return res.send(err)
     }
 }
 

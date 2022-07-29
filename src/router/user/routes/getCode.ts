@@ -36,9 +36,9 @@ const getCode = async (req: Request, res: Response<Code>) => {
                 expire_date: new Date(Date.now() + 1000 * 90),
             },
         })
-        res.send({ code: code.name, created: new Date(Date.now()), end: code.expire_date || new Date() })
+        return res.send({ code: code.name, created: new Date(Date.now()), end: code.expire_date || new Date() })
     } catch (err: any) {
-        res.status(500).send(err)
+        return res.status(500).send(err)
     }
 }
 

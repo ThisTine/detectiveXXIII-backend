@@ -37,10 +37,10 @@ const paringWithPartner = async (req: Request, res: Response) => {
             rind++
             if (rind >= rooms.length) rind = 0
         }
-        res.send("Success")
+        return res.send("Success")
     } catch (err) {
         console.log(err)
-        res.status(500).send("Internal server Error")
+        return res.status(500).send("Internal server Error")
     }
 }
 

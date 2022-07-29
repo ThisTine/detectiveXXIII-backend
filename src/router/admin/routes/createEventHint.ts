@@ -11,9 +11,9 @@ interface createEventHintRequest {
 const createEventHint = async (req: Request<any, any, createEventHintRequest>, res: Response<eventHint>) => {
     try {
         const data = await req.prisma.event_Hint.create({ data: { text: req.body.location, code: { create: { name: nanoid(8), type: "EVENT" } } } })
-        res.send({ id: data.id, location: data.text })
+        return res.send({ id: data.id, location: data.text })
     } catch (err: any) {
-        res.send(err)
+        return res.send(err)
     }
 }
 

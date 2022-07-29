@@ -25,9 +25,9 @@ const deleteEventGroup = async (req: Request<any, any, deleteEventGroupRequestRe
 
         const result = await prisma.$transaction([delete_EventGroupOnHint, delete_EventGroup])
 
-        res.send({ id: result[1].id })
+        return res.send({ id: result[1].id })
     } catch (err: any) {
-        res.send(err)
+        return res.send(err)
     }
 }
 

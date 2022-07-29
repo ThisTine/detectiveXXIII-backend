@@ -11,7 +11,7 @@ const fetchUser = async (req: Request, res: Response, next: NextFunction) => {
         })
         if (!user) {
             return req.logOut({}, (err) => {
-                res.status(404).send("User not found")
+                return res.status(404).send("User not found")
             })
         }
         req.user = user

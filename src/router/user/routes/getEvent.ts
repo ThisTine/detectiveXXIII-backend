@@ -40,7 +40,7 @@ const getEvent = async (req: Request, res: Response<Event | String>) => {
         }
         return res.send({ location: hint.hint.text })
     } catch (error: any) {
-        res.send(error)
+        return res.send(error)
     }
 }
 

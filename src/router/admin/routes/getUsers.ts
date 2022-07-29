@@ -59,9 +59,9 @@ const getUsers = async (req: Request, res: Response<UserList>) => {
                 year: item.year,
             })),
         }
-        res.send(mapdata)
+        return res.send(mapdata)
     } catch (err: any) {
-        res.status(500).send(err)
+        return res.status(500).send(err)
     }
 }
 

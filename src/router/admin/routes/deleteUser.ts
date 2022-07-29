@@ -22,9 +22,9 @@ const deleteUser = async (req: Request<any, any, DeletedUser>, res: Response<Del
         const user_Opened_Code = prisma.user_Opened_Code.deleteMany({ where: { user_id: req.body.id } })
         const hints = prisma.hint.deleteMany({ where: { user_id: req.body.id } })
         await prisma.$transaction([hints, user_Opened_Code, user])
-        res.send({ id: fuser?.id || "" })
+        return res.send({ id: fuser?.id || "" })
     } catch (err: any) {
-        res.status(500).send(err.toString())
+        return res.status(500).send(err.toString())
     }
 }
 

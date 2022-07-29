@@ -34,9 +34,9 @@ const getCodes = async (req: Request, res: Response<CodeList>) => {
 
         const code_Egroup = codeEgroup.map((item) => ({ location: item.text, code: item.code.name }))
 
-        res.send({ rooms: Room_Codes, events: code_Egroup })
+        return res.send({ rooms: Room_Codes, events: code_Egroup })
     } catch (err: any) {
-        res.status(500).send(err)
+        return res.status(500).send(err)
     }
 }
 

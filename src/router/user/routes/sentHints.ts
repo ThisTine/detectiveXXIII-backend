@@ -37,9 +37,9 @@ const sendHints = async (req: Request<any, any, HintsRequest>, res: Response<Hin
         }
         await prisma.hint.deleteMany({ where: { user_id: req.user?.id } })
         await prisma.hint.createMany({ data: [...queryBody] }) //เข้า database
-        res.send(req.body)
+        return res.send(req.body)
     } catch (error: any) {
-        res.send(error)
+        return res.send(error)
     }
 }
 

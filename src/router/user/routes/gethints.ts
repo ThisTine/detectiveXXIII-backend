@@ -40,9 +40,9 @@ export const getAllhints: (req: Request) => Promise<Hint> = async (req) => {
 const getHint = async (req: Request, res: Response<Hint>) => {
     try {
         const response = await getAllhints(req)
-        res.send(response)
+        return res.send(response)
     } catch (error: any) {
-        res.status(500).send(error)
+        return res.status(500).send(error)
     }
 }
 

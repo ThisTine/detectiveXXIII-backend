@@ -17,14 +17,14 @@ const getEventHints = async (req: Request, res: Response<EventHints>) => {
     try {
         const { prisma } = req
         const result = await prisma.event_Hint.findMany()
-        res.send({
+        return res.send({
             hints: result.map((item) => ({
                 id: item.id,
                 location: item.text,
             })),
         })
     } catch (err: any) {
-        res.send(err)
+        return res.send(err)
     }
 }
 

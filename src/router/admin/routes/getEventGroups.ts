@@ -39,11 +39,11 @@ const getEventGroups = async (req: Request, res: Response<eventGroups>) => {
             users: item.users,
         }))
 
-        res.send({
+        return res.send({
             groups: resQuery,
         })
     } catch (err: any) {
-        res.send(err)
+        return res.send(err)
     }
 }
 

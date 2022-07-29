@@ -31,9 +31,9 @@ const applyforroom = async (req: Request<any, any, sendCodeBody, any>, res: Resp
         const room = await prisma.room.findFirst({ where: { code: req.body.code }, select: { id: true, _count: { select: { users: true } } } })
         if (!room || room._count.users > 3) throw new Error("Room not found")
         await prisma.user.update({ where: { id: req.user?.id }, data: { room: { connect: { id: room.id } } } })
-        res.send({ status: "paring_with_partner" })
+        return res.send({ status: "paring_with_partner" })
     } catch (err: any) {
-        res.status(400).send(err.toString())
+        return res.status(400).send(err.toString())
     }
 }
 
@@ -50,7 +50,7 @@ const applyforparing = async (
     try {
         const { prisma } = req
         if (code.id === req.user?.id) {
-            res.status(400).send("Cannot use code that refer to yourself" as any)
+            return res.status(400).send("Cannot use code that refer to yourself" as any)
             throw new Error("Cannot use code that refer to yourself")
         }
         if (
@@ -69,7 +69,7 @@ const applyforparing = async (
                 update: { code_id: req.user?.id || "", user_id: code.id },
                 create: { code_id: req.user?.id || "", user_id: code.id },
             })
-            res.send({ status: "paring_success" })
+            return res.send({ status: "paring_success" })
         } else {
             await prisma.user_Opened_Code.upsert({
                 where: { user_id_code_id: { code_id: code.id, user_id: req.user?.id || "" } },
@@ -77,10 +77,10 @@ const applyforparing = async (
                 create: { code_id: code.id, user_id: req.user?.id || "" },
             })
             await prisma.user.update({ where: { id: req.user?.id || "" }, data: { lifes: { decrement: 1 } } })
-            res.send({ status: "paring_fail" })
+            return res.send({ status: "paring_fail" })
         }
     } catch (err: any) {
-        res.status(500).send(err.toString())
+        return res.status(500).send(err.toString())
     }
 }
 

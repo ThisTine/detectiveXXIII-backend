@@ -84,7 +84,7 @@ const randomEventGroup = async (req: Request, res: Response<eventGroups>) => {
             },
         })
 
-        res.send({
+        return res.send({
             groups: res_event_Group.map((item) => ({
                 id: item.id,
                 hints: item.eventOnhints.map((hintItem) => ({
@@ -95,7 +95,7 @@ const randomEventGroup = async (req: Request, res: Response<eventGroups>) => {
             })),
         })
     } catch (err: any) {
-        res.send(err)
+        return res.send(err)
     }
 }
 
