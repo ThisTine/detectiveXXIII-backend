@@ -16,10 +16,12 @@ import connectRedis from "connect-redis"
 const SQLiteStore = SQLiteConnect(session)
 const RedisStore = connectRedis(session)
 
+const convertBoolean = (val?: string) => ((val || "").toLocaleUpperCase() === "TRUE" ? true : false)
+
 let gameConfig = {
-    isGameReady: true,
-    isEventReady: true,
-    isGameEnd: false,
+    isGameReady: convertBoolean(process.env.CONFIG_ISGAMEREADY),
+    isEventReady: convertBoolean(process.env.CONFIG_ISEVENTREADY),
+    isGameEnd: convertBoolean(process.env.CONFIG_ISGAMEEND),
 }
 
 type setGameConfigtype = (props: { isGameReady?: boolean; isEventReady?: boolean; isGameEnd?: boolean }) => void
