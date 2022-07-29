@@ -56,10 +56,9 @@ model Code {
 }
 
 model Room {
-  id         String @id @default(cuid())
-  user_count Int    @default(1)
-  code       String
-  users      User[]
+  id    String @id @default(cuid())
+  code  String
+  users User[]
 }
 
 model Event_Group {
