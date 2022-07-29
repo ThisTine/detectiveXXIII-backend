@@ -5,12 +5,16 @@ import adminRouter from "./router/admin/adminRouter"
 import passport from "passport"
 import MicrosoftInstance from "./passport/MicrosoftInstance"
 import userRouter from "./router/user/userRouter"
-import session, { Store } from "express-session"
+import session from "express-session"
 import authRouter from "./router/auth/authRouter"
 import SQLiteConnect from "connect-sqlite3"
 import path from "path"
+import cron from "node-cron"
+import { createClient } from "redis"
 import fetchUser from "./middleware/fetchUser"
+import connectRedis from "connect-redis"
 const SQLiteStore = SQLiteConnect(session)
+const RedisStore = connectRedis(session)
 
 let gameConfig = {
     isGameReady: true,
@@ -28,6 +32,9 @@ const setGameConfig: setGameConfigtype = (props) => {
         }
     })
 }
+
+const redisClient = createClient({ legacyMode: true, url: process.env.REDIS_URL, password: process.env.REDIS_PASSWORD })
+redisClient.connect().catch(console.error)
 
 const app = express()
 const prisma = new PrismaClient()
@@ -50,6 +57,11 @@ declare global {
     }
 }
 
+cron.schedule(process.env.CORNJOB_TIME || "", async () => {
+    const updated = await prisma.user.updateMany({ where: { lifes: { lt: 5 } }, data: { lifes: { increment: 1 } } })
+    console.log(Date.now(), " - updated ", updated.count, updated.count > 1 ? "people" : "person")
+})
+
 passport.use(MicrosoftInstance(prisma))
 
 app.use(
@@ -58,12 +70,13 @@ app.use(
         resave: false,
         saveUninitialized: false,
         cookie: { domain: process.env.COOKIE_ORIGIN, maxAge: 1000 * 60 * 60 * 24 * 30 },
-        ...(process.env.NODE_ENV !== "production" && {
-            store: new SQLiteStore({
-                db: "session.db",
-                dir: path.resolve(__dirname, "db"),
-            }) as session.Store,
-        }),
+        store:
+            process.env.NODE_ENV === "production"
+                ? (new RedisStore({ client: redisClient }) as session.Store)
+                : (new SQLiteStore({
+                      db: "session.db",
+                      dir: path.resolve(__dirname, "db"),
+                  }) as session.Store),
     })
 )
 

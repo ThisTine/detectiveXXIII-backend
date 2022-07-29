@@ -1,20 +1,10 @@
-import express from 'express'
-import cors from 'cors'
-import hello from './routes/hello'
+import express from "express"
+import cors from "cors"
+import hello from "./routes/hello"
 const router = express.Router()
 
-router.use(cors({allowedHeaders:["GET","POST"],origin:process.env.APP_URL,credentials:true}))
+router.use(cors({ allowedHeaders: ["GET", "POST"], origin: process.env.APP_URL, credentials: true }))
 
-router.get("/",hello)
-
-router.get("/showimage/:id",async (req,res)=>{
-    const {prisma} = req
-    const image = await prisma.user.findFirst({where:{id:req.params.id},select:{img:true}}) 
-    console.log(image?.img)
-    res.end(image?.img)
-})
-
-
-
+router.get("/", hello)
 
 export default router
