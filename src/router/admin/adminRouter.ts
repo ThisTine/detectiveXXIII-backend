@@ -20,7 +20,7 @@ import { validateMiddleware } from "../../middleware/validate"
 import { CreateEventGroupBody, WithId } from "../../validator/createEventGroupBody"
 import { EditEventHintBody } from "../../validator/editEventHintRequest"
 import { CreateEventHintBody } from "../../validator/createEventHintBody"
-import paringWithPartner from "./routes/paringWithPartner"
+// import paringWithPartner from "./routes/paringWithPartner"
 import getRooms from "./routes/getRoom"
 import putUserToRoom, { putUserToRoomBody } from "./routes/putUserToRoom"
 const adminRouter = express.Router()
@@ -67,10 +67,10 @@ adminRouter.delete("/event/hint", validateMiddleware(WithId), deleteEventhint)
 
 adminRouter.post("/event/hint", validateMiddleware(CreateEventHintBody), createEventHint)
 
-adminRouter.post("/user/partner", paringWithPartner)
+// adminRouter.post("/user/partner", paringWithPartner)
 
 adminRouter.get("/room", getRooms)
 
-adminRouter.put("/room", validateMiddleware(putUserToRoomBody) , putUserToRoom )
+adminRouter.put("/room", validateMiddleware(putUserToRoomBody), putUserToRoom)
 
 export default adminRouter

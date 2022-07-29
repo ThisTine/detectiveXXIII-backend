@@ -16,9 +16,17 @@ const putUserToRoom = async (req: Request<any, any, putUserToRoomBody>, res: Res
     try {
         const { prisma } = req
         if (req.body.roomId) {
-            let room: Room & { users: User[] }
+            let room: Room & {
+                users: User[]
+                _count: {
+                    users: number
+                }
+            }
             try {
-                room = await prisma.room.findFirstOrThrow({ where: { id: req.body.roomId }, include: { users: true } })
+                room = await prisma.room.findFirstOrThrow({
+                    where: { id: req.body.roomId },
+                    include: { users: true, _count: { select: { users: true } } },
+                })
             } catch (err) {
                 return res.status(400).send("Couldn't find room")
             }
@@ -41,9 +49,9 @@ const putUserToRoom = async (req: Request<any, any, putUserToRoomBody>, res: Res
 
             await prisma.$transaction(updateUsers)
 
-            console.log(room.user_count + usersWithdiffids.length)
+            console.log(room._count.users + usersWithdiffids.length)
 
-            if (room.user_count + usersWithdiffids.length > 3) {
+            if (room._count.users + usersWithdiffids.length > 3) {
                 return res.status(400).send("Maximum amount of people per 1 room is 3")
             }
             const roomreq = usersWithdiffids.map(({ id }) => prisma.room.update({ where: { id: room.id }, data: { users: { connect: { id } } } }))
