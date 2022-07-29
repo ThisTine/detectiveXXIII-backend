@@ -34,12 +34,13 @@ const getPartners = async (req: Request, res: Response<Partner | String>) => {
             select: { code_id: true },
         })
         // console.log(user_opened_code)
-        if (user_opened_code.length === 0 || user_opened_code.length !== partners.room._count.users - 1) {
+        if (user_opened_code.length === 0) {
             return res.status(400).json("Game is not complete yet")
         }
+        const opened_code_ids = user_opened_code.map((item) => item.code_id)
         return res.send({
             partners: partners.room.users
-                .filter((item) => item.id !== req.user?.id)
+                .filter((item) => item.id !== req.user?.id && opened_code_ids.includes(item.id))
                 .map((item) => ({ img: item.img, name: item.name, userId: item.id })),
         })
     } catch (err) {
