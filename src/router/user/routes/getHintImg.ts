@@ -16,7 +16,7 @@ const getHintImg = async (req: Request<any, any, getHintImgBody, getHintImgBody>
         if (hintsList.length !== 10) {
             return res.status(500).send("Internal server Error")
         }
-        let svgImage = await promises.readFile(join(__dirname, "../../../etc/hintimg/img.svg"))
+        let svgImage = await promises.readFile(join(__dirname, "../../../etc/hintimg/Img.svg"))
         let svgString = svgImage.toString()
         // let svgImage = svgHeader
         for (let i = 0; i < 10; i++) {
