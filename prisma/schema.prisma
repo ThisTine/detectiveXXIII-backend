@@ -7,92 +7,84 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String @id @default(uuid())
-  name String
-  email String
-  year Int @default(2)
-  lifes Int @default(5)
-  img String
-  opened_hints String
-  event_group_id String?
-  event_group Event_Group? @relation(fields: [event_group_id],references: [id])
-  event_hints_count Int @default(0)
-  user_opened_codes User_Opened_Code[]
-  hints Hint[]
-  code Code?
+model User {
+  id                 String             @id @default(uuid())
+  name               String
+  email              String
+  year               Int                @default(2)
+  lifes              Int                @default(5)
+  event_group_id     String?
+  event_hints_count  Int                @default(0)
+  opened_hints       Int                @default(0)
+  img                Bytes?
+  room_id            String?
+  isAdmin            Boolean            @default(false)
+  isPlayable         Boolean            @default(true)
+  opened_event_hints Int                @default(0)
+  event_group        Event_Group?       @relation(fields: [event_group_id], references: [id])
+  room               Room?              @relation(fields: [room_id], references: [id])
+  code               Code?
+  hints              Hint[]
+  user_opened_codes  User_Opened_Code[]
 }
 
-model Hint{
-  id String @id @default(cuid())
-  text String
+model Hint {
+  id      String @id @default(cuid())
+  text    String
   user_id String
-  user User @relation(fields: [user_id],references: [id])
+  user    User   @relation(fields: [user_id], references: [id])
 }
 
 model User_Opened_Code {
   user_id String
-  user User @relation(fields: [user_id],references: [id])
   code_id String
-  code Code @relation(fields: [code_id],references: [id])
-  @@id([user_id,code_id])
+  code    Code   @relation(fields: [code_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id])
+
+  @@id([user_id, code_id])
 }
 
-enum CodeType{
+model Code {
+  id                String             @id @default(cuid())
+  name              String
+  type              CodeType
+  user_id           String?            @unique
+  expire_date       DateTime?
+  user              User?              @relation(fields: [user_id], references: [id])
+  event_group_hint  Event_Hint?
+  users_opened_code User_Opened_Code[]
+}
+
+model Room {
+  id    String @id @default(cuid())
+  code  String
+  users User[]
+}
+
+model Event_Group {
+  id           String                @id @default(cuid())
+  eventOnhints Event_Group_On_Hint[]
+  users        User[]
+}
+
+model Event_Group_On_Hint {
+  group_id String
+  hint_id  String
+  group    Event_Group @relation(fields: [group_id], references: [id])
+  hint     Event_Hint  @relation(fields: [hint_id], references: [id])
+
+  @@id([group_id, hint_id])
+}
+
+model Event_Hint {
+  id           String                @id @default(cuid())
+  text         String
+  code_id      String                @unique
+  code         Code                  @relation(fields: [code_id], references: [id])
+  eventOnhints Event_Group_On_Hint[]
+}
+
+enum CodeType {
   EVENT
   PARING
-}
-
-model Code{
-  id String @id @default(cuid())
-  name String
-  type CodeType
-  event_group_hint Event_Hint?
-  users_opened_code User_Opened_Code[]
-  user_id String? @unique
-  user User? @relation(fields: [user_id],references: [id])
-}
-
-model Room{
-  id String @id @default(cuid())
-  user_count Int @default(1)
-  code String
-}
-
-model Event_Group{
-  id String @id @default(cuid())
-  users User[]
-  eventOnhints Event_Group_On_Hint[]
-}
-
-model Event_Group_On_Hint{
-  group_id String
-  group Event_Group @relation(fields: [group_id],references: [id])
-  hint_id String
-  hint Event_Hint @relation(fields: [hint_id],references: [id])
-  @@id([group_id,hint_id])
-}
-
-model Event_Hint{
-  id String @id @default(cuid())
-  text String
-  code_id String @unique
-  code Code @relation(fields: [code_id],references: [id])
-  eventOnhints Event_Group_On_Hint[]
-}
-
-model Admin_User{
-  id String @id @default(uuid())
-  name String 
-  email String
-  token String
-  created_tokens Admin_Token[]
-}
-
-model Admin_Token{
-  id String @id @default(cuid())
-  creator_id String?
-  creator Admin_User? @relation(fields: [creator_id],references: [id])
-  created_date DateTime @default(now())
-  exprie_date DateTime
 }
