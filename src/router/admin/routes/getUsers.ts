@@ -11,6 +11,7 @@ interface UserList {
         isPlayable: boolean
         status: userStatusType
         partnerCount: number
+        studentId: string | null
     }[]
 }
 
@@ -34,6 +35,7 @@ const getUsers = async (req: Request, res: Response<UserList>) => {
                 year: true,
                 lifes: true,
                 isPlayable: true,
+                student_id: true,
                 hints: {
                     select: {
                         id: true,
@@ -57,6 +59,7 @@ const getUsers = async (req: Request, res: Response<UserList>) => {
                 partnerCount: item.room?._count.users || 0,
                 status: userStatusType(item),
                 year: item.year,
+                studentId: item.student_id,
             })),
         }
         return res.send(mapdata)
