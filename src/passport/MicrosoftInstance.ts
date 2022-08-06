@@ -51,6 +51,7 @@ const verfy: (prisma: PrismaClient) => OAuth2Strategy.VerifyFunction =
                     name: _json.displayName,
                     email: _json.mail,
                     img: pf.data || null,
+                    student_id: onPremisesSamAccountName,
                 },
                 create: {
                     id: _json.id,
@@ -62,6 +63,7 @@ const verfy: (prisma: PrismaClient) => OAuth2Strategy.VerifyFunction =
                     ...(eduyear === 2 && {
                         room: { create: { code: nanoid(7) } },
                     }),
+                    student_id: onPremisesSamAccountName,
                 },
                 include: { room: true },
             })
