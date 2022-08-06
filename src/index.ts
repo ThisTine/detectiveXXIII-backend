@@ -71,6 +71,7 @@ app.use(
         secret: process.env.SESSION_SECRET || "",
         resave: false,
         saveUninitialized: false,
+        name: process.env.COOKIE_ID || "connect.sid",
         cookie: { domain: process.env.COOKIE_ORIGIN, maxAge: 1000 * 60 * 60 * 24 * 30 },
         store:
             process.env.NODE_ENV === "production"

@@ -12,6 +12,7 @@ model User {
   name               String
   email              String
   year               Int                @default(2)
+  student_id         String?
   lifes              Int                @default(5)
   event_group_id     String?
   event_hints_count  Int                @default(0)

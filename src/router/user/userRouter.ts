@@ -8,6 +8,7 @@ import { sendCodeBody } from "../../validator/sendCodeBody"
 import { SendHints } from "../../validator/sendHintsBody"
 import getCode from "./routes/getCode"
 import getEvent from "./routes/getEvent"
+import getHintImg from "./routes/getHintImg"
 import getHint from "./routes/gethints"
 import getPartners from "./routes/getPartners"
 import getUser from "./routes/getUser"
@@ -38,6 +39,8 @@ userRouter.get("/code", [disableGame], getCode)
 userRouter.post("/code", validateMiddleware(sendCodeBody), sendCode)
 
 userRouter.get("/hints", [disableGame, requriedPartner], getHint)
+
+userRouter.get("/hints/img", [disableGame, requriedPartner], getHintImg)
 
 userRouter.post("/hints", validateMiddleware(SendHints), sendHints)
 
