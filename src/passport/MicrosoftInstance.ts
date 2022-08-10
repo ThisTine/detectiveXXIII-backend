@@ -34,7 +34,7 @@ console.log(onPremisesSamAccountName,profile)
                     ((onPremisesSamAccountName as string).startsWith("62") ||
                         (onPremisesSamAccountName as string).startsWith("63") ||
                         (onPremisesSamAccountName as string).startsWith("64") ||
-                        (onPremisesSamAccountName as string).startsWith("65")) &&
+                        (onPremisesSamAccountName as string).startsWith("65"))
                 ) ||
                 !onPremisesSamAccountName ||
                 !_json
