@@ -82,6 +82,7 @@ const verfy: (prisma: PrismaClient) => OAuth2Strategy.VerifyFunction =
                 isPlayable: user.isPlayable,
             })
         } catch (err: any) {
+            console.log(err)
             return done(err)
         }
     }
