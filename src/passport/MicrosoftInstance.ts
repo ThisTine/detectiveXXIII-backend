@@ -26,6 +26,7 @@ const verfy: (prisma: PrismaClient) => OAuth2Strategy.VerifyFunction =
                     "Content-Type": "application/json",
                 },
             })
+console.log(onPremisesSamAccountName,profile)
             const { _json } = profile
             if (
                 !onPremisesSamAccountName ||
