@@ -35,7 +35,6 @@ console.log(onPremisesSamAccountName,profile)
                         (onPremisesSamAccountName as string).startsWith("63") ||
                         (onPremisesSamAccountName as string).startsWith("64") ||
                         (onPremisesSamAccountName as string).startsWith("65")) &&
-                    _json.officeLocation === "Computer Science"
                 ) ||
                 !onPremisesSamAccountName ||
                 !_json
