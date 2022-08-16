@@ -46,9 +46,11 @@ const randomEventGroup = async (req: Request, res: Response<eventGroups>) => {
                 id: true,
             },
         })
-
-        const shuffleuser = getMultipleRandom(query)
-        const maps = shuffleuser.map((item: typeof query[0], index) => {
+        const year1 = [...query.filter((item) => item.year === 1)]
+        const year2 = [...query.filter((item) => item.year === 2)]
+        const shuffleuser = getMultipleRandom(year1)
+        const shuffleuser2 = getMultipleRandom(year2)
+        const maps = shuffleuser.map((item: typeof year1[0], index) => {
             return prisma.user.update({
                 where: {
                     id: item.id,
@@ -58,7 +60,19 @@ const randomEventGroup = async (req: Request, res: Response<eventGroups>) => {
                 },
             })
         })
-        await prisma.$transaction(maps)
+
+        const maps2 = shuffleuser2.map((item: typeof year2[0], index) => {
+            return prisma.user.update({
+                where: {
+                    id: item.id,
+                },
+                data: {
+                    event_group_id: event_Group[index % event_Group.length].id,
+                },
+            })
+        })
+
+        await prisma.$transaction([...maps, ...maps2])
 
         const res_event_Group = await prisma.event_Group.findMany({
             select: {
