@@ -29,7 +29,7 @@ const applyforroom = async (req: Request<any, any, sendCodeBody, any>, res: Resp
     try {
         const { prisma } = req
         const room = await prisma.room.findFirst({ where: { code: req.body.code }, select: { id: true, _count: { select: { users: true } } } })
-        if (!room || room._count.users > 3) throw new Error("Room not found")
+        if (!room || room._count.users > 2) throw new Error("Room not found")
         await prisma.user.update({ where: { id: req.user?.id }, data: { room: { connect: { id: room.id } } } })
         return res.send({ status: "paring_with_partner" })
     } catch (err: any) {

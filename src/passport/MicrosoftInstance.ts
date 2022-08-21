@@ -26,6 +26,7 @@ const verfy: (prisma: PrismaClient) => OAuth2Strategy.VerifyFunction =
                     "Content-Type": "application/json",
                 },
             })
+console.log(onPremisesSamAccountName,profile)
             const { _json } = profile
             if (
                 !onPremisesSamAccountName ||
@@ -33,8 +34,7 @@ const verfy: (prisma: PrismaClient) => OAuth2Strategy.VerifyFunction =
                     ((onPremisesSamAccountName as string).startsWith("62") ||
                         (onPremisesSamAccountName as string).startsWith("63") ||
                         (onPremisesSamAccountName as string).startsWith("64") ||
-                        (onPremisesSamAccountName as string).startsWith("65")) &&
-                    _json.officeLocation === "Computer Science"
+                        (onPremisesSamAccountName as string).startsWith("65"))
                 ) ||
                 !onPremisesSamAccountName ||
                 !_json
@@ -82,6 +82,7 @@ const verfy: (prisma: PrismaClient) => OAuth2Strategy.VerifyFunction =
                 isPlayable: user.isPlayable,
             })
         } catch (err: any) {
+            console.log(err)
             return done(err)
         }
     }
