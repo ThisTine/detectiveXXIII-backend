@@ -60,8 +60,10 @@ declare global {
 }
 
 cron.schedule(process.env.CORNJOB_TIME || "", async () => {
-    const updated = await prisma.user.updateMany({ where: { lifes: { lt: 5 } }, data: { lifes: { increment: 1 } } })
-    console.log(Date.now(), " - updated ", updated.count, updated.count > 1 ? "people" : "person")
+    const updated = await prisma.user.updateMany({ where: { lifes: { equals: 4 } }, data: { lifes: { increment: 1 } } })
+    const updated2hearts = await prisma.user.updateMany({ where: { lifes: { lt: 4 } }, data: { lifes: { increment: 2 } } })
+    const updatecount = updated.count + updated2hearts.count
+    console.log(Date.now(), " - updated ", updatecount, updatecount > 1 ? "people" : "person")
 })
 
 passport.use(MicrosoftInstance(prisma))
@@ -77,9 +79,9 @@ app.use(
             process.env.NODE_ENV === "production"
                 ? (new RedisStore({ client: redisClient }) as session.Store)
                 : (new SQLiteStore({
-                      db: "session.db",
-                      dir: path.resolve(__dirname, "db"),
-                  }) as session.Store),
+                    db: "session.db",
+                    dir: path.resolve(__dirname, "db"),
+                }) as session.Store),
     })
 )
 
