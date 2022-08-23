@@ -15,6 +15,10 @@ const openHint = async (req: Request, res: Response<Hint | String>) => {
             return res.status(400).send("insufficient lifes")
         }
 
+        if (life.opened_hints >= 5) {
+            return res.status(400).send("The next 5 hints will be open in DETECTIVEXXIII's event on 3rd,Sep")
+        }
+
         await prisma.user.update({ where: { id: req.user?.id || "" }, data: { opened_hints: { increment: 1 }, lifes: { decrement: 3 } } })
         const hints = await prisma.user.findFirst({ select: { opened_hints: true }, where: { id: req.user?.id } })
         if (!hints || hints.opened_hints > 10) {
