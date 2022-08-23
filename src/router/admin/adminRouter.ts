@@ -23,6 +23,7 @@ import { CreateEventHintBody } from "../../validator/createEventHintBody"
 // import paringWithPartner from "./routes/paringWithPartner"
 import getRooms from "./routes/getRoom"
 import putUserToRoom, { putUserToRoomBody } from "./routes/putUserToRoom"
+import randomParing from "./routes/randomParing"
 const adminRouter = express.Router()
 
 adminRouter.use(
@@ -68,6 +69,8 @@ adminRouter.delete("/event/hint", validateMiddleware(WithId), deleteEventhint)
 adminRouter.post("/event/hint", validateMiddleware(CreateEventHintBody), createEventHint)
 
 // adminRouter.post("/user/partner", paringWithPartner)
+
+adminRouter.post("/user/randomparing", randomParing)
 
 adminRouter.get("/room", getRooms)
 
