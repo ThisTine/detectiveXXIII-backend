@@ -110,9 +110,8 @@ const applyforevent = async (
             })
             const userhint = await prisma.user.findFirst({
                 where: { id: req.user?.id },
-                select: {
-                    room: { select: { users: { select: { id: true, hints: { take: 1, skip: user.opened_hints } } } } },
-                })
+                select: { room: { select: { users: { select: { id: true, hints: { take: 1, skip: user.opened_hints } } } } } },
+            })
             let hints: string[] = []
             const partners = userhint?.room?.users.filter((item) => item.id !== user.id)
             partners?.forEach((item) => {
