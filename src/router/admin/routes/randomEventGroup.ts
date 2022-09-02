@@ -18,21 +18,13 @@ export interface eventGroups {
     groups: eventGroup[]
 }
 
-//Gun ( BlueBox ) && Boss ( Sorrawit )
-
-// random user ทั้งหมด เข้าไป event group อย่างละเท่า ๆ กัน
-
-// TODO:
-// query to get all user (array)
-// shuffle and divide them equally for db
-// insert into db:event_group (create)
-
 const randomEventGroup = async (req: Request, res: Response<eventGroups>) => {
     try {
         const { prisma } = req
         const query = await prisma.user.findMany({
             where: {
                 isPlayable: true,
+                isEvent: true,
             },
             select: {
                 id: true,

@@ -12,7 +12,6 @@ model User {
   name               String
   email              String
   year               Int                @default(2)
-  student_id         String?
   lifes              Int                @default(5)
   event_group_id     String?
   event_hints_count  Int                @default(0)
@@ -22,6 +21,8 @@ model User {
   isAdmin            Boolean            @default(false)
   isPlayable         Boolean            @default(true)
   opened_event_hints Int                @default(0)
+  student_id         String?
+  isEvent            Boolean            @default(true)
   event_group        Event_Group?       @relation(fields: [event_group_id], references: [id])
   room               Room?              @relation(fields: [room_id], references: [id])
   code               Code?
