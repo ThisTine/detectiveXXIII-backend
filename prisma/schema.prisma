@@ -28,7 +28,6 @@ model User {
   code               Code?
   hints              Hint[]
   user_opened_codes  User_Opened_Code[]
-  isEvent            Boolean            @default(true)
 }
 
 model Hint {
